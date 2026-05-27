@@ -1,0 +1,418 @@
+/* ============================================================
+   ØBM Admin — indholdsredigering
+   ============================================================ */
+const { useState, useEffect, useRef } = React;
+
+const SUPABASE_URL  = "https://zxbmaadxsjeyksbqdwyx.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4Ym1hYWR4c2pleWtzYnFkd3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MDk3NDcsImV4cCI6MjA5NTI4NTc0N30.r6JdDygRKtHi0J46O9uicQ-oN8mxxBFbQt4LyEAdkIg";
+
+const ADMIN_PASSWORD = "Ølstykke1202";
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+const DAYS = ["Fredag", "Lørdag", "Søndag"];
+
+/* ============================================================
+   App root — simpelt kodeord
+   ============================================================ */
+function AdminApp() {
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem("obm-admin") === "1");
+
+  const login  = () => { sessionStorage.setItem("obm-admin", "1");  setAuthed(true);  };
+  const logout = () => { sessionStorage.removeItem("obm-admin");     setAuthed(false); };
+
+  if (!authed) return <LoginForm onLogin={login} />;
+  return <Dashboard onLogout={logout} />;
+}
+
+/* ============================================================
+   Login
+   ============================================================ */
+function LoginForm({ onLogin }) {
+  const [pass, setPass] = useState("");
+  const [err,  setErr]  = useState("");
+
+  const submit = (e) => {
+    e.preventDefault();
+    if (pass === ADMIN_PASSWORD) {
+      onLogin();
+    } else {
+      setErr("Forkert kodeord — prøv igen.");
+      setPass("");
+    }
+  };
+
+  return (
+    <div className="a-login">
+      <div className="a-login-box">
+        <div className="a-logo" style={{ display:"grid", placeItems:"center", fontWeight:900, margin:"0 auto 20px" }}>ØBM</div>
+        <h1>Admin</h1>
+        <form onSubmit={submit}>
+          <div className="a-field">
+            <label>Kodeord</label>
+            <input type="password" value={pass} onChange={e => setPass(e.target.value)} required autoFocus placeholder="••••••••••" />
+          </div>
+          {err && <div className="a-err">{err}</div>}
+          <button type="submit" className="a-btn-primary">Log ind</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Dashboard med tabs
+   ============================================================ */
+function Dashboard({ onLogout }) {
+  const [tab, setTab] = useState("program");
+
+  return (
+    <div className="a-app">
+      <header className="a-header">
+        <div className="a-header-inner">
+          <div className="a-brand">
+            <div className="a-logo-sm">ØBM</div>
+            <span>Admin · Ølstykke By &amp; Motorfestival</span>
+          </div>
+          <button className="a-btn-ghost" onClick={onLogout}>Log ud</button>
+        </div>
+      </header>
+
+      <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%" }}>
+        <div className="a-tabs">
+          {[["program","Program"],["lineup","Lineup"],["billeder","Billeder"]].map(([k, l]) => (
+            <button key={k} className={"a-tab" + (tab === k ? " active" : "")} onClick={() => setTab(k)}>{l}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="a-content">
+        {tab === "program"  && <ProgramEditor />}
+        {tab === "lineup"   && <LineupEditor />}
+        {tab === "billeder" && <ImagesEditor />}
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Program-editor
+   ============================================================ */
+function ProgramEditor() {
+  const [day,     setDay]     = useState("Lørdag");
+  const [rows,    setRows]    = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    const { data } = await sb.from("program_items").select("*").eq("day", day).order("sort_order");
+    setRows(data || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, [day]);
+
+  const del = async (id) => {
+    if (!confirm("Slet denne række?")) return;
+    await sb.from("program_items").delete().eq("id", id);
+    setRows(r => r.filter(x => x.id !== id));
+  };
+
+  const save = async (form) => {
+    if (form.id) {
+      const { data } = await sb.from("program_items").update(form).eq("id", form.id).select().single();
+      setRows(r => r.map(x => x.id === form.id ? data : x));
+    } else {
+      const { data } = await sb.from("program_items").insert({ ...form, day, sort_order: rows.length + 1 }).select().single();
+      setRows(r => [...r, data]);
+    }
+    setEditing(null);
+  };
+
+  return (
+    <div>
+      <div className="a-section-head">
+        <h2>Program</h2>
+        <div className="a-day-tabs">
+          {DAYS.map(d => (
+            <button key={d} className={"a-day-tab" + (day === d ? " active" : "")} onClick={() => setDay(d)}>{d}</button>
+          ))}
+        </div>
+      </div>
+
+      {loading ? <div className="a-loading">Indlæser...</div> : (
+        <table className="a-table">
+          <thead>
+            <tr><th>Tid</th><th>Titel</th><th>Undertekst</th><th>Tag</th><th></th></tr>
+          </thead>
+          <tbody>
+            {rows.map(r => (
+              <tr key={r.id}>
+                <td className="a-mono">{r.time_str}</td>
+                <td><strong>{r.title}</strong></td>
+                <td className="a-muted">{r.sub}</td>
+                <td>{r.tag && <span className="a-tag">{r.tag}</span>}</td>
+                <td>
+                  <div className="a-actions">
+                    <button onClick={() => setEditing(r)}>Rediger</button>
+                    <button className="a-del" onClick={() => del(r.id)}>Slet</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {rows.length === 0 && (
+              <tr><td colSpan={5} style={{ textAlign:"center", color:"#aaa", padding: 32 }}>Ingen punkter endnu.</td></tr>
+            )}
+          </tbody>
+        </table>
+      )}
+
+      <button className="a-btn-add" onClick={() => setEditing({ time_str:"", title:"", sub:"", tag:"" })}>
+        + Tilføj punkt
+      </button>
+
+      {editing !== null && <RowModal row={editing} onSave={save} onClose={() => setEditing(null)} />}
+    </div>
+  );
+}
+
+function RowModal({ row, onSave, onClose }) {
+  const [form, setForm] = useState({ time_str: row.time_str || "", title: row.title || "", sub: row.sub || "", tag: row.tag || "", id: row.id });
+  const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  return (
+    <div className="a-overlay" onClick={onClose}>
+      <div className="a-modal" onClick={e => e.stopPropagation()}>
+        <h3>{form.id ? "Rediger punkt" : "Nyt punkt"}</h3>
+        <div className="a-field"><label>Tidspunkt</label><input value={form.time_str} onChange={set("time_str")} placeholder="18:30" /></div>
+        <div className="a-field"><label>Titel</label><input value={form.title} onChange={set("title")} placeholder="Live på scenen" /></div>
+        <div className="a-field"><label>Undertekst</label><input value={form.sub} onChange={set("sub")} placeholder="Kort beskrivelse..." /></div>
+        <div className="a-field"><label>Tag (valgfri)</label><input value={form.tag} onChange={set("tag")} placeholder="HOT · LIVE · ÅBEN" /></div>
+        <div className="a-modal-actions">
+          <button className="a-btn-ghost" onClick={onClose}>Annuller</button>
+          <button className="a-btn-primary" onClick={() => onSave(form)}>Gem</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Lineup-editor
+   ============================================================ */
+function LineupEditor() {
+  const [items,   setItems]   = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(null);
+
+  useEffect(() => {
+    sb.from("lineup_items").select("*").order("sort_order").then(({ data }) => {
+      setItems(data || []);
+      setLoading(false);
+    });
+  }, []);
+
+  const del = async (id) => {
+    if (!confirm("Slet dette lineup-element?")) return;
+    await sb.from("lineup_items").delete().eq("id", id);
+    setItems(i => i.filter(x => x.id !== id));
+  };
+
+  const save = async (form, imageFile) => {
+    let imageUrl = form.image_url || null;
+
+    if (imageFile) {
+      const path = `lineup/${form.id || Date.now()}-${imageFile.name}`;
+      const { data: upData, error: upErr } = await sb.storage.from("festival-images").upload(path, imageFile, { upsert: true });
+      if (!upErr) {
+        const { data: { publicUrl } } = sb.storage.from("festival-images").getPublicUrl(upData.path);
+        imageUrl = publicUrl;
+      } else {
+        alert("Billede-upload fejlede: " + upErr.message);
+      }
+    }
+
+    const payload = { ...form, image_url: imageUrl };
+    delete payload.id;
+
+    if (form.id) {
+      const { data } = await sb.from("lineup_items").update(payload).eq("id", form.id).select().single();
+      setItems(i => i.map(x => x.id === form.id ? data : x));
+    } else {
+      const { data } = await sb.from("lineup_items").insert({ ...payload, sort_order: items.length + 1 }).select().single();
+      setItems(i => [...i, data]);
+    }
+    setEditing(null);
+  };
+
+  return (
+    <div>
+      <div className="a-section-head">
+        <h2>Lineup</h2>
+        <button className="a-btn-primary"
+          onClick={() => setEditing({ name:"", meta:"", tag:"", blurb:"", img_label:"", icon:"", image_url:null })}>
+          + Tilføj
+        </button>
+      </div>
+
+      {loading ? <div className="a-loading">Indlæser...</div> : (
+        <div className="a-card-grid">
+          {items.map(item => (
+            <div key={item.id} className="a-card">
+              {item.image_url
+                ? <img src={item.image_url} className="a-card-img" alt={item.name} />
+                : <div className="a-card-img-ph">{item.icon || "?"}</div>
+              }
+              <div className="a-card-body">
+                <div className="a-card-tag">{item.tag}</div>
+                <div className="a-card-name">{item.name}</div>
+                <div className="a-card-meta">{item.meta}</div>
+              </div>
+              <div className="a-card-actions">
+                <button onClick={() => setEditing({ ...item })}>Rediger</button>
+                <button className="a-del" onClick={() => del(item.id)}>Slet</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {editing && <LineupModal item={editing} onSave={save} onClose={() => setEditing(null)} />}
+    </div>
+  );
+}
+
+function LineupModal({ item, onSave, onClose }) {
+  const [form,      setForm]      = useState({ ...item });
+  const [imageFile, setImageFile] = useState(null);
+  const [preview,   setPreview]   = useState(item.image_url || null);
+  const [saving,    setSaving]    = useState(false);
+  const fileRef = useRef();
+  const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const onFileChange = e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    setImageFile(f);
+    setPreview(URL.createObjectURL(f));
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    await onSave(form, imageFile);
+    setSaving(false);
+  };
+
+  return (
+    <div className="a-overlay" onClick={onClose}>
+      <div className="a-modal a-modal-wide" onClick={e => e.stopPropagation()}>
+        <h3>{form.id ? "Rediger lineup" : "Nyt lineup-element"}</h3>
+        <div className="a-modal-cols">
+          <div>
+            <div className="a-field"><label>Navn</label><input value={form.name} onChange={set("name")} /></div>
+            <div className="a-field"><label>Meta (by · type)</label><input value={form.meta} onChange={set("meta")} placeholder="Sjælland · Heavy Showtruck" /></div>
+            <div className="a-field"><label>Tag</label><input value={form.tag} onChange={set("tag")} placeholder="Headliner · Showtruck · Flåde" /></div>
+            <div className="a-field"><label>Ikon (2-4 bogstaver)</label><input value={form.icon} onChange={set("icon")} placeholder="HCG" maxLength={4} /></div>
+          </div>
+          <div>
+            <div className="a-field">
+              <label>Billede</label>
+              <div className="a-img-upload" onClick={() => fileRef.current.click()}>
+                {preview
+                  ? <img src={preview} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt="preview" />
+                  : <span>Klik for at uploade billede</span>
+                }
+              </div>
+              <input ref={fileRef} type="file" accept="image/*" style={{ display:"none" }} onChange={onFileChange} />
+              {preview && (
+                <button style={{ marginTop:8, fontSize:12, color:"#e63946", background:"none", border:"none", cursor:"pointer", padding:0 }}
+                  onClick={() => { setPreview(null); setImageFile(null); setForm(f => ({ ...f, image_url: null })); }}>
+                  Fjern billede
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="a-field">
+          <label>Beskrivelse</label>
+          <textarea value={form.blurb} onChange={set("blurb")} rows={3} placeholder="Kort beskrivelse der vises på hjemmesiden..." />
+        </div>
+        <div className="a-modal-actions">
+          <button className="a-btn-ghost" onClick={onClose}>Annuller</button>
+          <button className="a-btn-primary" onClick={handleSave} disabled={saving}>
+            {saving ? "Gemmer..." : "Gem"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ============================================================
+   Billede-editor (hero + sektioner)
+   ============================================================ */
+function ImagesEditor() {
+  const [images,  setImages]  = useState({});
+  const [uploading, setUploading] = useState(null);
+  const [activeSection, setActiveSection] = useState(null);
+  const fileRef = useRef();
+
+  const sections = [
+    { key: "hero",   label: "Hero-billede",     desc: "Det store billede øverst på forsiden (anbefalet: 900×1100px)" },
+    { key: "banner", label: "Banner-billede",   desc: "Bruges evt. til fremtidige bannere og deling på sociale medier" },
+  ];
+
+  useEffect(() => {
+    sb.from("site_images").select("*").then(({ data }) => {
+      const map = {};
+      (data || []).forEach(r => { map[r.section] = r.url; });
+      setImages(map);
+    });
+  }, []);
+
+  const upload = async (section, file) => {
+    setUploading(section);
+    const path = `site/${section}-${Date.now()}-${file.name}`;
+    const { data: upData, error } = await sb.storage.from("festival-images").upload(path, file, { upsert: true });
+    if (!error) {
+      const { data: { publicUrl } } = sb.storage.from("festival-images").getPublicUrl(upData.path);
+      await sb.from("site_images").upsert({ section, url: publicUrl, updated_at: new Date().toISOString() });
+      setImages(i => ({ ...i, [section]: publicUrl }));
+    } else {
+      alert("Upload fejlede: " + error.message);
+    }
+    setUploading(null);
+  };
+
+  return (
+    <div>
+      <div className="a-section-head">
+        <h2>Billeder</h2>
+      </div>
+      <p style={{ color:"#888", fontSize:14, marginBottom:24, marginTop:-8 }}>
+        Upload billeder der vises på hjemmesiden. Supabase Storage skal have en bucket der hedder <strong>festival-images</strong> (se OPSÆTNING.md).
+      </p>
+      {sections.map(s => (
+        <div key={s.key} className="a-image-row">
+          <div className="a-image-info">
+            <strong>{s.label}</strong>
+            <p>{s.desc}</p>
+            {images[s.key] && (
+              <a href={images[s.key]} target="_blank" style={{ fontSize:12, color:"#e63946", marginTop:8, display:"block" }}>Se nuværende billede →</a>
+            )}
+          </div>
+          <div className="a-img-upload-lg" onClick={() => { setActiveSection(s.key); fileRef.current.click(); }}>
+            {images[s.key]
+              ? <img src={images[s.key]} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt={s.label} />
+              : <span>{uploading === s.key ? "Uploader..." : "Klik for at uploade"}</span>
+            }
+          </div>
+        </div>
+      ))}
+      <input ref={fileRef} type="file" accept="image/*" style={{ display:"none" }}
+        onChange={e => { if (e.target.files[0] && activeSection) upload(activeSection, e.target.files[0]); e.target.value = ""; }} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("admin-root")).render(<AdminApp />);

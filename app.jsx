@@ -5,6 +5,20 @@ const { useState, useEffect, useMemo } = React;
 const D = window.OBM_DATA;
 const Billet = window.Billet;
 
+// Supabase REST — henter live data til program og lineup
+const SUPABASE_URL  = "https://zxbmaadxsjeyksbqdwyx.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4Ym1hYWR4c2pleWtzYnFkd3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MDk3NDcsImV4cCI6MjA5NTI4NTc0N30.r6JdDygRKtHi0J46O9uicQ-oN8mxxBFbQt4LyEAdkIg";
+
+async function sbFetch(table, params = "") {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
+      headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` },
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch { return null; }
+}
+
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "palette": ["#e63946", "#d4a942"],
   "displayFont": "Anton",
@@ -50,6 +64,7 @@ function applyTweaks(t) {
 
 /* ---------- Topbar ---------- */
 function Topbar() {
+  const [open, setOpen] = useState(false);
   const links = [
     { href: "#billet", label: "Billetter" },
     { href: "#program", label: "Program" },
@@ -57,10 +72,11 @@ function Topbar() {
     { href: "#afstemning", label: "Afstemning" },
     { href: "#info", label: "Praktisk" },
   ];
+  const close = () => setOpen(false);
   return (
     <header className="topbar">
       <div className="topbar-inner">
-        <a href="#top" className="brand">
+        <a href="#top" className="brand" onClick={close}>
           <div className="brand-mark"><span>Ø</span></div>
           <div className="brand-text">
             <span className="a">Ølstykke By &amp; Motorfestival</span>
@@ -71,7 +87,24 @@ function Topbar() {
           {links.map(l => <a key={l.href} href={l.href}>{l.label}</a>)}
           <a className="nav-cta" href="#billet">Køb billet — 30 kr <span>→</span></a>
         </nav>
+        <button
+          className={"hamburger" + (open ? " open" : "")}
+          onClick={() => setOpen(o => !o)}
+          aria-label={open ? "Luk menu" : "Åbn menu"}
+        >
+          <span /><span /><span />
+        </button>
       </div>
+      {open && (
+        <nav className="mobile-nav">
+          {links.map(l => (
+            <a key={l.href} href={l.href} onClick={close}>{l.label}</a>
+          ))}
+          <a className="mobile-cta" href="#billet" onClick={close}>
+            Køb billet — 30 kr →
+          </a>
+        </nav>
+      )}
     </header>
   );
 }
@@ -205,11 +238,11 @@ function ReachStrip() {
   return (
     <div className="section section-tight" style={{ paddingTop: 56, paddingBottom: 56 }}>
       <div className="container">
-        <div style={{ display: "grid", gridTemplateColumns: `repeat(${stats.length}, 1fr)`, gap: 1, background: "var(--line)", border: "1px solid var(--line)" }}>
+        <div className="reach-grid">
           {stats.map((s, i) => (
-            <div key={i} style={{ background: "var(--bg)", padding: "28px 24px" }}>
+            <div key={i} className="reach-cell">
               <div className="label label-bracket" style={{ marginBottom: 10 }}>{s.label}</div>
-              <div style={{ fontFamily: "var(--ff-display)", fontSize: 56, lineHeight: 0.9, color: "var(--cream)" }}>{s.num}</div>
+              <div className="big-num">{s.num}</div>
             </div>
           ))}
         </div>
@@ -249,6 +282,24 @@ function WhatGrid() {
 
 /* ---------- Lineup ---------- */
 function Lineup() {
+  const [items, setItems] = useState(D.lineup);
+
+  useEffect(() => {
+    sbFetch("lineup_items", "select=*&order=sort_order").then(data => {
+      if (data && data.length > 0) {
+        setItems(data.map(l => ({
+          name:     l.name,
+          meta:     l.meta,
+          tag:      l.tag,
+          blurb:    l.blurb,
+          imgLabel: l.img_label,
+          icon:     l.icon,
+          imageUrl: l.image_url,
+        })));
+      }
+    });
+  }, []);
+
   return (
     <section className="section" id="lineup">
       <div className="container">
@@ -257,13 +308,18 @@ function Lineup() {
             <span className="label label-bracket">02 / Bekræftet lineup</span>
             <h2>Folk<br />der <span className="accent">møder op</span></h2>
           </div>
-          <span className="num">[ 06 navne · flere på vej ]</span>
+          <span className="num">[ {items.length} navne · flere på vej ]</span>
         </div>
         <div className="lineup">
-          {D.lineup.map(l => (
+          {items.map(l => (
             <div key={l.name} className="line-card">
               <div className="line-tag">{l.tag}</div>
-              <div className="line-img"><ImgPH label={l.imgLabel} icon={l.icon} /></div>
+              <div className="line-img">
+                {l.imageUrl
+                  ? <img src={l.imageUrl} alt={l.name} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+                  : <ImgPH label={l.imgLabel} icon={l.icon} />
+                }
+              </div>
               <div className="line-body">
                 <div className="meta">{l.meta}</div>
                 <div className="name">{l.name}</div>
@@ -281,7 +337,22 @@ function Lineup() {
 function Program() {
   const days = Object.keys(D.program);
   const [active, setActive] = useState("Lørdag");
-  const data = D.program[active];
+  const [liveProgram, setLiveProgram] = useState(null);
+
+  useEffect(() => {
+    sbFetch("program_items", "select=*&order=sort_order").then(data => {
+      if (!data || data.length === 0) return;
+      const grouped = {};
+      data.forEach(r => {
+        if (!grouped[r.day]) grouped[r.day] = { day: r.day.toUpperCase(), date: D.program[r.day]?.date || "", rows: [] };
+        grouped[r.day].rows.push({ time: r.time_str, title: r.title, sub: r.sub, tag: r.tag });
+      });
+      setLiveProgram(grouped);
+    });
+  }, []);
+
+  const program = liveProgram || D.program;
+  const data = program[active] || program[Object.keys(program)[0]];
   return (
     <section className="section" id="program" style={{ background: "var(--bg-2)", borderTop: "1px solid var(--line)", borderBottom: "1px solid var(--line)" }}>
       <div className="container">
@@ -498,6 +569,7 @@ function Footer() {
         <div className="foot-bottom">
           <span>© 2026 Ølstykke By &amp; Motorfestival</span>
           <span>[ Det bliver for vildt — vi ses 07 — 09 AUG ]</span>
+          <a href="admin.html" style={{ color: "var(--cream-dim)", fontSize: 12, opacity: 0.4, textDecoration: "none", letterSpacing: "0.08em" }}>Admin</a>
         </div>
       </div>
     </footer>
