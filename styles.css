@@ -209,15 +209,11 @@ img { display: block; max-width: 100%; }
   overflow: hidden;
 }
 .hero-grid {
-  display: grid;
-  grid-template-columns: 1.05fr 1fr;
-  gap: 56px;
-  align-items: start;
   padding: 0 32px;
   max-width: var(--container);
   margin: 0 auto;
 }
-.hero-left { padding-bottom: 48px; }
+.hero-left { padding-bottom: 64px; }
 .hero-eyebrow {
   display: flex; align-items: center; gap: 14px;
   margin-bottom: 36px;

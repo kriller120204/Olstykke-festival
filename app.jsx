@@ -186,17 +186,8 @@ function Hero({ showCountdown = true }) {
               Se programmet <span className="arrow">→</span>
             </a>
           </div>
-        </div>
-
-        <div className="hero-right">
-          <div className="hero-image">
-            {heroImg
-              ? <img src={heroImg} alt="Hero" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              : <ImgPH label="Hero · Showtruck ved nat, fuld lyssætning" icon="ØBM" />
-            }
-          </div>
           {showCountdown && (
-            <div className="counter">
+            <div className="counter" style={{ marginTop: 32 }}>
               <span className="counter-label">[ Nedtælling til portene åbner ]</span>
               <div className="counter-vals">
                 <div className="cell"><span className="num">{String(c.d).padStart(2, "0")}</span><span className="unit">dage</span></div>
