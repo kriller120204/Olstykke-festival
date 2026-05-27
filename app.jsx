@@ -144,64 +144,69 @@ function Hero({ showCountdown = true }) {
       .catch(() => {});
   }, []);
 
-  const bgStyle = heroImg ? {
-    backgroundImage: `linear-gradient(to bottom, rgba(11,10,9,0.5) 0%, rgba(11,10,9,0.72) 100%), url(${heroImg})`,
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  } : {};
-
   return (
-    <section className="hero hero-full" id="top" style={bgStyle}>
-      <div className="hero-content">
-        <div className="hero-eyebrow">
-          <span className="dot"></span>
-          <span className="label">[ ØBM · 4. udgave · Stadionvej, Ølstykke ]</span>
-        </div>
-        <h1 className="hero-title">
-          <span className="row">Ølstykke</span>
-          <span className="row outline">By &amp;</span>
-          <span className="row"><span className="accent">Motor</span>festival</span>
-        </h1>
-        <p className="hero-tag">
-          Det bliver <span className="strike">for stort</span> for vildt.
-        </p>
-        <div className="hero-meta">
-          <div>
-            <div>Datoer</div>
-            <strong>07 — 09 AUG 2026</strong>
+    <section className="hero" id="top">
+      <div className="hero-grid">
+        <div className="hero-left">
+          <div className="hero-eyebrow">
+            <span className="dot"></span>
+            <span className="label">[ ØBM · 4. udgave · Stadionvej, Ølstykke ]</span>
           </div>
-          <div>
-            <div>Sted</div>
-            <strong>Stadionvej, 3650 Ølstykke</strong>
-          </div>
-          <div>
-            <div>Varighed</div>
-            <strong>Fre · Lør · Søn</strong>
-          </div>
-          <div>
-            <div>Entré</div>
-            <strong>30 kr · alle 3 dage</strong>
-          </div>
-        </div>
-        <div className="hero-cta-row">
-          <a href="#billet" className="btn btn-primary btn-xl">
-            Køb billet — 30 kr <span className="arrow">→</span>
-          </a>
-          <a href="#program" className="btn btn-ghost">
-            Se programmet <span className="arrow">→</span>
-          </a>
-        </div>
-        {showCountdown && (
-          <div className="counter">
-            <span className="counter-label">[ Nedtælling til portene åbner ]</span>
-            <div className="counter-vals">
-              <div className="cell"><span className="num">{String(c.d).padStart(2, "0")}</span><span className="unit">dage</span></div>
-              <div className="cell"><span className="num">{String(c.h).padStart(2, "0")}</span><span className="unit">timer</span></div>
-              <div className="cell"><span className="num">{String(c.m).padStart(2, "0")}</span><span className="unit">min</span></div>
-              <div className="cell"><span className="num">{String(c.s).padStart(2, "0")}</span><span className="unit">sek</span></div>
+          <h1 className="hero-title">
+            <span className="row">Ølstykke</span>
+            <span className="row outline">By &amp;</span>
+            <span className="row"><span className="accent">Motor</span>festival</span>
+          </h1>
+          <p className="hero-tag">
+            Det bliver <span className="strike">for stort</span> for vildt.
+          </p>
+          <div className="hero-meta">
+            <div>
+              <div>Datoer</div>
+              <strong>07 — 09 AUG 2026</strong>
+            </div>
+            <div>
+              <div>Sted</div>
+              <strong>Stadionvej, 3650 Ølstykke</strong>
+            </div>
+            <div>
+              <div>Varighed</div>
+              <strong>Fre · Lør · Søn</strong>
+            </div>
+            <div>
+              <div>Entré</div>
+              <strong>30 kr · alle 3 dage</strong>
             </div>
           </div>
-        )}
+          <div className="hero-cta-row">
+            <a href="#billet" className="btn btn-primary btn-xl">
+              Køb billet — 30 kr <span className="arrow">→</span>
+            </a>
+            <a href="#program" className="btn btn-ghost">
+              Se programmet <span className="arrow">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="hero-right">
+          <div className="hero-image">
+            {heroImg
+              ? <img src={heroImg} alt="Hero" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              : <ImgPH label="Hero · Showtruck ved nat, fuld lyssætning" icon="ØBM" />
+            }
+          </div>
+          {showCountdown && (
+            <div className="counter">
+              <span className="counter-label">[ Nedtælling til portene åbner ]</span>
+              <div className="counter-vals">
+                <div className="cell"><span className="num">{String(c.d).padStart(2, "0")}</span><span className="unit">dage</span></div>
+                <div className="cell"><span className="num">{String(c.h).padStart(2, "0")}</span><span className="unit">timer</span></div>
+                <div className="cell"><span className="num">{String(c.m).padStart(2, "0")}</span><span className="unit">min</span></div>
+                <div className="cell"><span className="num">{String(c.s).padStart(2, "0")}</span><span className="unit">sek</span></div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );
