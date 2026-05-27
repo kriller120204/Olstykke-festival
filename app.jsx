@@ -134,62 +134,65 @@ function useCountdown(target) {
 }
 
 /* ---------- Hero ---------- */
-function Hero({ showCountdown = true, showSticker = true }) {
-  const c = useCountdown(new Date(2026, 7, 7, 16, 0, 0).getTime()); // Aug = 7 (0-indexed)
+function Hero({ showCountdown = true }) {
+  const c = useCountdown(new Date(2026, 7, 7, 16, 0, 0).getTime());
+  const [heroImg, setHeroImg] = useState(null);
+
+  useEffect(() => {
+    sbFetch("site_images", "select=url&section=eq.hero&limit=1")
+      .then(d => { if (d?.[0]?.url) setHeroImg(d[0].url); })
+      .catch(() => {});
+  }, []);
+
+  const bgStyle = heroImg ? {
+    backgroundImage: `linear-gradient(to bottom, rgba(11,10,9,0.5) 0%, rgba(11,10,9,0.72) 100%), url(${heroImg})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  } : {};
+
   return (
-    <section className="hero" id="top">
-      <div className="hero-grid">
-        <div className="hero-left">
-          <div className="hero-eyebrow">
-            <span className="dot"></span>
-            <span className="label">[ ØBM · 4. udgave · Stadionvej, Ølstykke ]</span>
+    <section className="hero hero-full" id="top" style={bgStyle}>
+      <div className="hero-content">
+        <div className="hero-eyebrow">
+          <span className="dot"></span>
+          <span className="label">[ ØBM · 4. udgave · Stadionvej, Ølstykke ]</span>
+        </div>
+        <h1 className="hero-title">
+          <span className="row">Ølstykke</span>
+          <span className="row outline">By &amp;</span>
+          <span className="row"><span className="accent">Motor</span>festival</span>
+        </h1>
+        <p className="hero-tag">
+          Det bliver <span className="strike">for stort</span> for vildt.
+        </p>
+        <div className="hero-meta">
+          <div>
+            <div>Datoer</div>
+            <strong>07 — 09 AUG 2026</strong>
           </div>
-          <h1 className="hero-title">
-            <span className="row">Ølstykke</span>
-            <span className="row outline">By &amp;</span>
-            <span className="row"><span className="accent">Motor</span>festival</span>
-          </h1>
-          <p className="hero-tag">
-            Det bliver <span className="strike">for stort</span> for vildt.
-          </p>
-          <div className="hero-meta">
-            <div>
-              <div>Datoer</div>
-              <strong>07 — 09 AUG 2026</strong>
-            </div>
-            <div>
-              <div>Sted</div>
-              <strong>Stadionvej, 3650 Ølstykke</strong>
-            </div>
-            <div>
-              <div>Varighed</div>
-              <strong>Fre · Lør · Søn</strong>
-            </div>
-            <div>
-              <div>Entré</div>
-              <strong>30 kr · alle 3 dage</strong>
-            </div>
+          <div>
+            <div>Sted</div>
+            <strong>Stadionvej, 3650 Ølstykke</strong>
           </div>
-          <div className="hero-cta-row">
-            <a href="#billet" className="btn btn-primary">
-              Køb billet — 30 kr <span className="arrow">→</span>
-            </a>
-            <a href="#program" className="btn btn-ghost">
-              Se programmet <span className="arrow">→</span>
-            </a>
+          <div>
+            <div>Varighed</div>
+            <strong>Fre · Lør · Søn</strong>
+          </div>
+          <div>
+            <div>Entré</div>
+            <strong>30 kr · alle 3 dage</strong>
           </div>
         </div>
-
-        <div className="hero-right">
-          <div className="hero-image">
-            <ImgPH label="Hero · Showtruck ved nat, fuld lyssætning" icon="ØBM" />
-          </div>
-          {showSticker && (
-            <div className="sticker">
-              150+<small>tilmeldte biler</small>
-            </div>
-          )}
-          {showCountdown && <div className="counter">
+        <div className="hero-cta-row">
+          <a href="#billet" className="btn btn-primary btn-xl">
+            Køb billet — 30 kr <span className="arrow">→</span>
+          </a>
+          <a href="#program" className="btn btn-ghost">
+            Se programmet <span className="arrow">→</span>
+          </a>
+        </div>
+        {showCountdown && (
+          <div className="counter">
             <span className="counter-label">[ Nedtælling til portene åbner ]</span>
             <div className="counter-vals">
               <div className="cell"><span className="num">{String(c.d).padStart(2, "0")}</span><span className="unit">dage</span></div>
@@ -197,8 +200,8 @@ function Hero({ showCountdown = true, showSticker = true }) {
               <div className="cell"><span className="num">{String(c.m).padStart(2, "0")}</span><span className="unit">min</span></div>
               <div className="cell"><span className="num">{String(c.s).padStart(2, "0")}</span><span className="unit">sek</span></div>
             </div>
-          </div>}
-        </div>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -594,7 +597,6 @@ function App() {
       <Topbar />
       <HeroWrapped t={t} />
       <Marquee />
-      <ReachStrip />
       <div className="hazard hazard-red"></div>
       <Billet />
       <WhatGrid />
