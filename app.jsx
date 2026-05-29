@@ -501,7 +501,7 @@ function TruckCTA() {
           <div className="tc-lhs">
             <div className="label label-bracket" style={{ marginBottom: 10 }}>Har du selv en maskine?</div>
             <h4>Tilmeld din lastbil, lowrider eller custom</h4>
-            <p>Vi vil gerne have din bil med på pladsen. Tilmelding senest <strong style={{ color: "var(--cream)" }}>24. juli 2026</strong> — send os en besked på Messenger eller ring.</p>
+            <p>Vi vil gerne have din bil med på pladsen. Tilmelding senest <strong style={{ color: "var(--cream)" }}>24. juli 2026</strong> — send os en besked på Messenger.</p>
           </div>
           <div className="tc-fees">
             <div>
@@ -513,8 +513,8 @@ function TruckCTA() {
               <strong>400 kr</strong>
             </div>
           </div>
-          <a className="btn btn-ghost" href="tel:+4533605274">
-            Ring 33 60 52 74 <span className="arrow">→</span>
+          <a className="btn btn-ghost" href="#info">
+            Kontakt os <span className="arrow">→</span>
           </a>
         </div>
       </div>
@@ -561,9 +561,8 @@ function Practical() {
           <div className="p-cell">
             <div className="label label-bracket">Kontakt</div>
             <h4>Vi svarer hurtigt</h4>
-            <a className="line" href={`tel:+45${phone.replace(/\s/g,"")}`}>Telefon · {phone}</a>
             <a className="line" href={fbUrl} target="_blank" rel="noopener">Messenger · ØBM på Facebook</a>
-            <p style={{ marginTop: 10 }}>Helst på Messenger — så får alle frivillige beskeden.</p>
+            <p style={{ marginTop: 10 }}>Skriv til os på Messenger — så får alle frivillige beskeden.</p>
           </div>
           <div className="p-cell">
             <div className="label label-bracket">Billetter</div>
@@ -613,7 +612,6 @@ function Footer() {
             <h5>Følg med</h5>
             <a href="#">Facebook</a>
             <a href="#">Messenger</a>
-            <a href="tel:+4533605274">33 60 52 74</a>
           </div>
         </div>
 

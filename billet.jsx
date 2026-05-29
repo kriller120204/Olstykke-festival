@@ -57,6 +57,20 @@ function Billet() {
                 </div>
                 <div className="lprice">30<span className="kr">kr</span></div>
               </div>
+              <div className="row">
+                <div>
+                  <div className="ltype">Fællesspisning · voksen</div>
+                  <div className="ldesc">Fredag aften · begrænset pladser</div>
+                </div>
+                <div className="lprice">189<span className="kr">kr</span></div>
+              </div>
+              <div className="row">
+                <div>
+                  <div className="ltype">Fællesspisning · barn</div>
+                  <div className="ldesc">Fredag aften · begrænset pladser</div>
+                </div>
+                <div className="lprice">99<span className="kr">kr</span></div>
+              </div>
             </div>
 
             <ul className="billet-bullets">

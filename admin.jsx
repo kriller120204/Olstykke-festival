@@ -665,8 +665,7 @@ function SettingsEditor() {
   const [saved,    setSaved]    = useState(false);
 
   const FIELDS = [
-    { key: "phone",        label: "Telefonnummer",   placeholder: "33 60 52 74" },
-    { key: "facebook_url", label: "Facebook-link",   placeholder: "https://facebook.com/ølstykke-festival" },
+    { key: "facebook_url", label: "Facebook-link",   placeholder: "https://facebook.com/olstykke-festival" },
     { key: "address1",     label: "Adresse linje 1", placeholder: "Stadionvej" },
     { key: "address2",     label: "Adresse linje 2", placeholder: "3650 Ølstykke" },
     { key: "ticket_price", label: "Billetpris (kr)", placeholder: "30" },
