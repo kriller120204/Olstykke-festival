@@ -79,7 +79,7 @@ function Dashboard({ onLogout }) {
 
       <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%" }}>
         <div className="a-tabs">
-          {[["program","Program"],["lineup","Lineup"],["hvad","Hvad sker der"],["billeder","Billeder"],["indstillinger","Indstillinger"]].map(([k, l]) => (
+          {[["program","Program"],["lineup","Lineup"],["afstemning","Afstemning"],["hvad","Hvad sker der"],["billeder","Billeder"],["indstillinger","Indstillinger"]].map(([k, l]) => (
             <button key={k} className={"a-tab" + (tab === k ? " active" : "")} onClick={() => setTab(k)}>{l}</button>
           ))}
         </div>
@@ -88,6 +88,7 @@ function Dashboard({ onLogout }) {
       <div className="a-content">
         {tab === "program"       && <ProgramEditor />}
         {tab === "lineup"        && <LineupEditor />}
+        {tab === "afstemning"    && <VotingEditor />}
         {tab === "hvad"          && <WhatEditor />}
         {tab === "billeder"      && <ImagesEditor />}
         {tab === "indstillinger" && <SettingsEditor />}
@@ -318,7 +319,7 @@ function LineupModal({ item, onSave, onClose }) {
           </div>
           <div>
             <div className="a-field">
-              <label>Billede</label>
+              <label>Billede til lineup-kortet (forsiden, sektion 02)</label>
               <div className="a-img-upload" onClick={() => fileRef.current.click()}>
                 {preview
                   ? <img src={preview} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt="preview" />
@@ -360,8 +361,16 @@ function ImagesEditor() {
   const fileRef = useRef();
 
   const sections = [
-    { key: "hero",   label: "Hero-billede",     desc: "Det store billede øverst på forsiden (anbefalet: 900×1100px)" },
-    { key: "banner", label: "Banner-billede",   desc: "Bruges evt. til fremtidige bannere og deling på sociale medier" },
+    {
+      key:   "hero",
+      label: "Forsidebillede — bag titlen oppe",
+      desc:  "Vises som baggrundsbillede bag 'Ølstykke By & Motorfestival' helt oppe pa forsiden. Brug et bredformat foto af trucks, show eller pladsen. Anbefalet storrelse: mindst 1600x900px.",
+    },
+    {
+      key:   "banner",
+      label: "Delingsbillede — Facebook og Instagram",
+      desc:  "Vises nar festivalen deles pa sociale medier (Facebook, Instagram, Messenger). Brug et horisontalt foto med det bedste motiv fra festivalen. Anbefalet storrelse: 1200x630px.",
+    },
   ];
 
   useEffect(() => {
@@ -413,6 +422,150 @@ function ImagesEditor() {
       ))}
       <input ref={fileRef} type="file" accept="image/*" style={{ display:"none" }}
         onChange={e => { if (e.target.files[0] && activeSection) upload(activeSection, e.target.files[0]); e.target.value = ""; }} />
+    </div>
+  );
+}
+
+/* ============================================================
+   Afstemnings-editor (Danmarks fedeste bil)
+   ============================================================ */
+function VotingEditor() {
+  const [items,   setItems]   = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(null);
+
+  useEffect(() => {
+    sb.from("vote_options").select("*").order("sort_order").then(({ data }) => {
+      setItems(data || []);
+      setLoading(false);
+    });
+  }, []);
+
+  const del = async (id) => {
+    if (!confirm("Slet denne kandidat?")) return;
+    await sb.from("vote_options").delete().eq("id", id);
+    setItems(i => i.filter(x => x.id !== id));
+  };
+
+  const save = async (form, imageFile) => {
+    let imageUrl = form.image_url || null;
+
+    if (imageFile) {
+      const path = "afstemning/" + (form.id || Date.now()) + "-" + imageFile.name;
+      const { data: upData, error: upErr } = await sb.storage.from("festival-images").upload(path, imageFile, { upsert: true });
+      if (!upErr) {
+        const { data: { publicUrl } } = sb.storage.from("festival-images").getPublicUrl(upData.path);
+        imageUrl = publicUrl;
+      } else {
+        alert("Billede-upload fejlede: " + upErr.message);
+      }
+    }
+
+    const payload = { name: form.name, owner: form.owner, image_url: imageUrl };
+
+    if (form.id) {
+      const { data } = await sb.from("vote_options").update(payload).eq("id", form.id).select().single();
+      setItems(i => i.map(x => x.id === form.id ? data : x));
+    } else {
+      const { data } = await sb.from("vote_options").insert({ ...payload, sort_order: items.length + 1 }).select().single();
+      setItems(i => [...i, data]);
+    }
+    setEditing(null);
+  };
+
+  return (
+    <div>
+      <div className="a-section-head">
+        <h2>Afstemning — Danmarks fedeste bil</h2>
+        <button className="a-btn-primary" onClick={() => setEditing({ name: "", owner: "", image_url: null })}>+ Tilføj kandidat</button>
+      </div>
+      <p style={{ color: "#888", fontSize: 14, marginBottom: 24, marginTop: -8 }}>
+        Kandidaterne vises i afstemningssektionen pa forsiden (sektion 04). Upload et foto af koretoejet til hvert kort — gerne set forfra eller fra siden.
+      </p>
+
+      {loading ? <div className="a-loading">Indlaesser...</div> : (
+        <div className="a-card-grid">
+          {items.map(item => (
+            <div key={item.id} className="a-card">
+              {item.image_url
+                ? <img src={item.image_url} className="a-card-img" alt={item.name} />
+                : <div className="a-card-img-ph" style={{ fontSize: 13, color: "#bbb", fontWeight: 400, letterSpacing: "0.04em" }}>Intet foto endnu</div>
+              }
+              <div className="a-card-body">
+                <div className="a-card-tag">Kandidat</div>
+                <div className="a-card-name">{item.name}</div>
+                <div className="a-card-meta">{item.owner}</div>
+              </div>
+              <div className="a-card-actions">
+                <button onClick={() => setEditing({ ...item })}>Rediger</button>
+                <button className="a-del" onClick={() => del(item.id)}>Slet</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {editing && <VoteModal item={editing} onSave={save} onClose={() => setEditing(null)} />}
+    </div>
+  );
+}
+
+function VoteModal({ item, onSave, onClose }) {
+  const [form,      setForm]      = useState({ ...item });
+  const [imageFile, setImageFile] = useState(null);
+  const [preview,   setPreview]   = useState(item.image_url || null);
+  const [saving,    setSaving]    = useState(false);
+  const fileRef = useRef();
+  const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  const onFileChange = e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    setImageFile(f);
+    setPreview(URL.createObjectURL(f));
+  };
+
+  return (
+    <div className="a-overlay" onClick={onClose}>
+      <div className="a-modal a-modal-wide" onClick={e => e.stopPropagation()}>
+        <h3>{form.id ? "Rediger kandidat" : "Ny kandidat"}</h3>
+        <div className="a-modal-cols">
+          <div>
+            <div className="a-field">
+              <label>Koretojets navn</label>
+              <input value={form.name} onChange={set("name")} placeholder="Cadillac De Ville Lowrider 70" />
+            </div>
+            <div className="a-field">
+              <label>Ejer / deltager</label>
+              <input value={form.owner} onChange={set("owner")} placeholder="Hildes Custom Garage" />
+            </div>
+          </div>
+          <div>
+            <div className="a-field">
+              <label>Foto af koretoejet (afstemningskort, forsiden sektion 04)</label>
+              <div className="a-img-upload" onClick={() => fileRef.current.click()}>
+                {preview
+                  ? <img src={preview} style={{ width: "100%", height: "100%", objectFit: "cover" }} alt="preview" />
+                  : <span>Klik for at uploade foto</span>
+                }
+              </div>
+              <input ref={fileRef} type="file" accept="image/*" style={{ display: "none" }} onChange={onFileChange} />
+              {preview && (
+                <button style={{ marginTop: 8, fontSize: 12, color: "#e63946", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                  onClick={() => { setPreview(null); setImageFile(null); setForm(f => ({ ...f, image_url: null })); }}>
+                  Fjern billede
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className="a-modal-actions">
+          <button className="a-btn-ghost" onClick={onClose}>Annuller</button>
+          <button className="a-btn-primary" disabled={saving} onClick={async () => { setSaving(true); await onSave(form, imageFile); setSaving(false); }}>
+            {saving ? "Gemmer..." : "Gem"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

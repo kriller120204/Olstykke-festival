@@ -408,15 +408,29 @@ function Program() {
 
 /* ---------- Voting ---------- */
 function Voting() {
-  const [votes, setVotes] = useState(() =>
-    D.voteOptions.reduce((acc, v) => ({ ...acc, [v.id]: v.pct }), {})
-  );
-  const [voted, setVoted] = useState(null);
-  const total = useMemo(() => Object.values(votes).reduce((a, b) => a + b, 0), [votes]);
+  const [options, setOptions] = useState(D.voteOptions);
+  const [votes,   setVotes]   = useState({});
+  const [voted,   setVoted]   = useState(null);
+
+  useEffect(() => {
+    sbFetch("vote_options", "select=*&order=sort_order").then(data => {
+      if (data && data.length > 0) {
+        setOptions(data);
+        setVotes(data.reduce((acc, v) => ({ ...acc, [v.id]: 0 }), {}));
+      } else {
+        setVotes(D.voteOptions.reduce((acc, v) => ({ ...acc, [v.id]: v.pct }), {}));
+      }
+    });
+  }, []);
+
+  const total = useMemo(() => {
+    const vals = Object.values(votes);
+    return vals.length ? vals.reduce((a, b) => a + b, 0) || 1 : 1;
+  }, [votes]);
 
   const cast = (id) => {
     if (voted) return;
-    setVotes(v => ({ ...v, [id]: v[id] + 6 }));
+    setVotes(v => ({ ...v, [id]: (v[id] || 0) + 6 }));
     setVoted(id);
   };
 
@@ -431,16 +445,21 @@ function Voting() {
           <span className="num">[ stem én gang · vindes lørdag 22:00 ]</span>
         </div>
         <div className="vote-grid">
-          {D.voteOptions.map(o => {
-            const pct = Math.round((votes[o.id] / total) * 100);
+          {options.map(o => {
+            const pct = Math.round(((votes[o.id] || 0) / total) * 100);
             return (
               <button
                 key={o.id}
                 className={"vote-card" + (voted === o.id ? " voted" : "")}
                 onClick={() => cast(o.id)}
               >
-                <div className="vote-stamp">Stemt ✓</div>
-                <div className="vote-img"><ImgPH label={o.img} /></div>
+                <div className="vote-stamp">Stemt!</div>
+                <div className="vote-img">
+                  {o.image_url
+                    ? <img src={o.image_url} alt={o.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    : <ImgPH label={o.img || o.name} />
+                  }
+                </div>
                 <div className="vote-body">
                   <div className="vote-name">{o.name}</div>
                   <div className="vote-owner">{o.owner}</div>
@@ -455,7 +474,7 @@ function Voting() {
           })}
         </div>
         <div style={{ marginTop: 24, fontFamily: "var(--ff-mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--cream-dim)" }}>
-          {voted ? "[ Tak — din stemme er talt. ]" : "[ Klik på din favorit. ]"}
+          {voted ? "[ Tak — din stemme er talt. ]" : "[ Klik paa din favorit. ]"}
         </div>
       </div>
     </section>
