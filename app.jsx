@@ -451,7 +451,7 @@ function Voting() {
         <div className="section-head">
           <div className="lhs">
             <span className="label label-bracket">04 / Truckspotters' afstemning</span>
-            <h2>Hvilken er<br /><span className="accent">Danmarks fedeste</span> bil?</h2>
+            <h2>Hvilken er<br /><span className="accent">ØBM's fedeste</span> bil?</h2>
           </div>
           <span className="num">[ stem én gang · vindes lørdag 22:00 ]</span>
         </div>
