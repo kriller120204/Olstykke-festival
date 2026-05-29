@@ -149,8 +149,14 @@ function Hero({ showCountdown = true }) {
       .catch(() => {});
   }, []);
 
+  const heroStyle = heroImg ? {
+    backgroundImage: `linear-gradient(rgba(11,10,9,0.55), rgba(11,10,9,0.55)), url(${heroImg})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  } : {};
+
   return (
-    <section className="hero" id="top">
+    <section className="hero" id="top" style={heroStyle}>
       <div className="hero-grid">
         <div className="hero-left">
           <div className="hero-eyebrow">

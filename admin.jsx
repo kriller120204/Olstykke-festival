@@ -387,7 +387,11 @@ function ImagesEditor() {
     const { data: upData, error } = await sb.storage.from("festival-images").upload(path, file, { upsert: true });
     if (!error) {
       const { data: { publicUrl } } = sb.storage.from("festival-images").getPublicUrl(upData.path);
-      await sb.from("site_images").upsert({ section, url: publicUrl, updated_at: new Date().toISOString() });
+      const { error: dbErr } = await sb.from("site_images").upsert(
+        { section, url: publicUrl, updated_at: new Date().toISOString() },
+        { onConflict: "section" }
+      );
+      if (dbErr) { alert("Gem fejlede: " + dbErr.message); setUploading(null); return; }
       setImages(i => ({ ...i, [section]: publicUrl }));
     } else {
       alert("Upload fejlede: " + error.message);
