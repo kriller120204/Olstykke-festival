@@ -962,7 +962,7 @@ img { display: block; max-width: 100%; }
 .tikkio-box {
   border: 1px solid var(--line);
   background: var(--bg-2);
-  padding: 40px 36px;
+  padding: 28px 28px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -1033,26 +1033,27 @@ img { display: block; max-width: 100%; }
     linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
+  padding: 56px 0;
 }
 
 .billet-grid {
   display: grid;
   grid-template-columns: 0.85fr 1fr;
-  gap: 56px;
+  gap: 40px;
   align-items: stretch;
 }
 
-.billet-info { display: flex; flex-direction: column; gap: 28px; }
+.billet-info { display: flex; flex-direction: column; gap: 16px; }
 .billet-info h3 {
   font-family: var(--ff-display);
-  font-size: 48px;
+  font-size: 36px;
   line-height: 1.02;
   margin: 0;
   text-transform: uppercase;
 }
 .billet-info .lead {
   color: var(--cream-dim);
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.6;
   max-width: 480px;
   margin: 0;
@@ -1063,32 +1064,32 @@ img { display: block; max-width: 100%; }
 }
 .billet-pricing .row {
   display: flex; justify-content: space-between; align-items: baseline;
-  padding: 22px 24px;
+  padding: 12px 18px;
   border-bottom: 1px solid var(--line);
 }
 .billet-pricing .row:last-child { border-bottom: none; }
 .billet-pricing .ltype {
   font-family: var(--ff-display);
-  font-size: 24px;
+  font-size: 18px;
   text-transform: uppercase;
   line-height: 1;
 }
 .billet-pricing .ldesc {
   font-family: var(--ff-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.14em;
+  font-size: 10px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--cream-dim);
-  margin-top: 6px;
+  margin-top: 4px;
 }
 .billet-pricing .lprice {
   font-family: var(--ff-display);
-  font-size: 36px;
+  font-size: 26px;
   color: var(--gold);
   line-height: 1;
 }
 .billet-pricing .lprice .kr {
-  font-size: 14px;
+  font-size: 12px;
   color: var(--cream-dim);
   margin-left: 4px;
 }

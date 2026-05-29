@@ -8,11 +8,11 @@ const TIKKIO_URL = "https://tikkio.com/events/64286";
 function TikkioCTA() {
   return (
     <div className="tikkio-box">
-      <div className="label label-bracket" style={{ marginBottom: 20 }}>Billetter via Tikkio</div>
-      <div style={{ fontFamily: "var(--ff-display)", fontSize: 42, lineHeight: 1.02, textTransform: "uppercase", marginBottom: 18 }}>
+      <div className="label label-bracket" style={{ marginBottom: 12 }}>Billetter via Tikkio</div>
+      <div style={{ fontFamily: "var(--ff-display)", fontSize: 32, lineHeight: 1.02, textTransform: "uppercase", marginBottom: 12 }}>
         Klar til<br />festivalen?
       </div>
-      <p style={{ color: "var(--cream-dim)", fontSize: 15, lineHeight: 1.65, marginBottom: 32, maxWidth: 360 }}>
+      <p style={{ color: "var(--cream-dim)", fontSize: 14, lineHeight: 1.6, marginBottom: 20, maxWidth: 360 }}>
         Billetter købes sikkert via Tikkio. Du modtager din billet direkte på email — klar til scanning ved indgangen.
       </p>
 
