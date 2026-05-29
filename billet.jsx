@@ -25,16 +25,6 @@ function TikkioCTA() {
         <span>✓ Betalingskort</span>
         <span>✓ Billet på email</span>
       </div>
-
-      <div style={{ marginTop: 36, paddingTop: 24, borderTop: "1px solid var(--line)" }}>
-        <div className="label label-bracket" style={{ marginBottom: 12 }}>Børn under 12 år</div>
-        <div style={{ fontFamily: "var(--ff-display)", fontSize: 28, color: "var(--accent)", textTransform: "uppercase" }}>
-          Gratis
-        </div>
-        <div style={{ fontFamily: "var(--ff-mono)", fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--cream-dim)", marginTop: 4 }}>
-          I følge med voksen · ingen billet nødvendig
-        </div>
-      </div>
     </div>
   );
 }
@@ -56,23 +46,16 @@ function Billet() {
           <div className="billet-info">
             <h3>Én pris.<br />Hele weekenden.</h3>
             <p className="lead">
-              Vi holder entréen lav — 30 kr giver dig adgang til alle tre dage, alle showene, hele showtruck-pladsen og hele kræmmer­markedet. Børn under 12 år er gratis i følge med en voksen.
+              Vi holder entréen lav — 30 kr giver dig adgang til alle tre dage, alle showene, hele showtruck-pladsen og hele kræmmer­markedet.
             </p>
 
             <div className="billet-pricing">
               <div className="row">
                 <div>
-                  <div className="ltype">Voksen 12+</div>
+                  <div className="ltype">Festivalsbillet</div>
                   <div className="ldesc">Adgang alle 3 dage</div>
                 </div>
                 <div className="lprice">30<span className="kr">kr</span></div>
-              </div>
-              <div className="row">
-                <div>
-                  <div className="ltype">Barn 0—11</div>
-                  <div className="ldesc">I følge med voksen</div>
-                </div>
-                <div className="lprice free">GRATIS</div>
               </div>
             </div>
 

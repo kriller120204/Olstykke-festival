@@ -347,7 +347,7 @@ function Program() {
   const [liveProgram, setLiveProgram] = useState(null);
 
   useEffect(() => {
-    sbFetch("program_items", "select=*&order=sort_order").then(data => {
+    sbFetch("program_items", "select=*&order=time_str").then(data => {
       if (!data || data.length === 0) return;
       const grouped = {};
       data.forEach(r => {
@@ -557,12 +557,12 @@ function Practical() {
           <div className="p-cell">
             <div className="label label-bracket">Billetter</div>
             <h4>{price} kr · alle 3 dage</h4>
-            <p>Børn under 12 år gratis i følge med voksen.<br /><br />Køb online eller i indgangen — vi anbefaler online for hurtig adgang.</p>
+            <p>Én billet giver adgang til alle tre dage.<br /><br />Køb online via Tikkio eller i indgangen — vi anbefaler online for hurtig adgang.</p>
           </div>
           <div className="p-cell">
             <div className="label label-bracket">For familien</div>
             <h4>Hele dagen, hele weekenden</h4>
-            <p>Kræmmermarked, tivoli, madboder og børneaktiviteter. Gratis for børn under 12 år ifølge med voksen.</p>
+            <p>Kræmmermarked, tivoli, madboder og masser af aktiviteter for hele familien.</p>
           </div>
         </div>
       </div>

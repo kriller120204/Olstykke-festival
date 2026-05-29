@@ -108,7 +108,7 @@ function ProgramEditor() {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await sb.from("program_items").select("*").eq("day", day).order("sort_order");
+    const { data } = await sb.from("program_items").select("*").eq("day", day).order("time_str");
     setRows(data || []);
     setLoading(false);
   };
@@ -126,8 +126,8 @@ function ProgramEditor() {
       const { data } = await sb.from("program_items").update(form).eq("id", form.id).select().single();
       setRows(r => r.map(x => x.id === form.id ? data : x));
     } else {
-      const { data } = await sb.from("program_items").insert({ ...form, day, sort_order: rows.length + 1 }).select().single();
-      setRows(r => [...r, data]);
+      const { data } = await sb.from("program_items").insert({ ...form, day, sort_order: 0 }).select().single();
+      setRows(r => [...r, data].sort((a, b) => a.time_str.localeCompare(b.time_str)));
     }
     setEditing(null);
   };
