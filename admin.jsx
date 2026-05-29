@@ -551,7 +551,7 @@ function SettingsEditor() {
         </div>
       ))}
       <button className="a-btn-primary" onClick={saveAll} disabled={saving} style={{ marginTop: 8 }}>
-        {saving ? "Gemmer..." : saved ? "Gemt ✓" : "Gem indstillinger"}
+        {saving ? "Gemmer..." : saved ? "Gemt!" : "Gem indstillinger"}
       </button>
     </div>
   );

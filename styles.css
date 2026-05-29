@@ -205,17 +205,17 @@ img { display: block; max-width: 100%; }
 /* ----- hero ----- */
 .hero {
   position: relative;
-  padding: 56px 0 64px;
+  padding: 40px 0 40px;
 }
 .hero-grid {
   padding: 0 32px;
   max-width: var(--container);
   margin: 0 auto;
 }
-.hero-left { padding-bottom: 64px; }
+.hero-left { padding-bottom: 0; }
 .hero-eyebrow {
   display: flex; align-items: center; gap: 14px;
-  margin-bottom: 36px;
+  margin-bottom: 20px;
 }
 .hero-eyebrow .dot {
   width: 8px; height: 8px; background: var(--red); border-radius: 50%;
@@ -228,10 +228,10 @@ img { display: block; max-width: 100%; }
 }
 .hero-title {
   font-family: var(--ff-display);
-  font-size: clamp(64px, 9.2vw, 144px);
-  line-height: 0.98;
+  font-size: clamp(48px, 6.5vw, 96px);
+  line-height: 0.96;
   letter-spacing: 0.002em;
-  margin: 0 0 28px;
+  margin: 0 0 16px;
   text-transform: uppercase;
 }
 .hero-title .row { display: block; padding-top: 0.04em; }
@@ -242,15 +242,15 @@ img { display: block; max-width: 100%; }
 }
 .hero-tag {
   font-family: var(--ff-display);
-  font-size: 28px;
+  font-size: 22px;
   letter-spacing: 0.02em;
   color: var(--gold);
-  margin: 0 0 36px;
+  margin: 0 0 20px;
   text-transform: uppercase;
 }
 .hero-tag .strike { text-decoration: line-through; text-decoration-color: var(--red); opacity: 0.55; }
 .hero-meta {
-  display: flex; flex-wrap: wrap; gap: 28px;
+  display: flex; flex-wrap: wrap; gap: 20px;
   font-family: var(--ff-mono);
   font-size: 12px;
   color: var(--cream-dim);
@@ -259,7 +259,7 @@ img { display: block; max-width: 100%; }
 }
 .hero-meta strong { color: var(--cream); font-weight: 500; display: block; font-size: 13px; margin-top: 2px; }
 .hero-cta-row {
-  display: flex; gap: 16px; margin-top: 40px;
+  display: flex; gap: 16px; margin-top: 24px;
   flex-wrap: wrap;
 }
 .btn {
@@ -1578,7 +1578,17 @@ img { display: block; max-width: 100%; }
   .brand-text .b { display: none; }
   .nav { display: none; }
   .hamburger { display: flex; }
-  .btn-xl { padding: 18px 28px; font-size: 13px; }
+  .hero { padding: 28px 0 32px; }
+  .hero-grid { padding: 0 16px; }
+  .hero-eyebrow { margin-bottom: 14px; }
+  .hero-title { font-size: clamp(44px, 13vw, 72px); margin: 0 0 12px; }
+  .hero-tag { font-size: 17px; margin: 0 0 14px; }
+  .hero-meta { gap: 14px; }
+  .hero-cta-row { margin-top: 18px; gap: 10px; }
+  .btn-xl { padding: 14px 22px; font-size: 12px; }
+  .counter { padding: 12px 14px; }
+  .counter-vals .num { font-size: 26px; }
+  .counter-vals { gap: 10px; }
   .what-grid, .lineup, .vote-grid, .practical { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .fee-grid { grid-template-columns: 1fr; }
