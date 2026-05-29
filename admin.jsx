@@ -79,16 +79,18 @@ function Dashboard({ onLogout }) {
 
       <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%" }}>
         <div className="a-tabs">
-          {[["program","Program"],["lineup","Lineup"],["billeder","Billeder"]].map(([k, l]) => (
+          {[["program","Program"],["lineup","Lineup"],["hvad","Hvad sker der"],["billeder","Billeder"],["indstillinger","Indstillinger"]].map(([k, l]) => (
             <button key={k} className={"a-tab" + (tab === k ? " active" : "")} onClick={() => setTab(k)}>{l}</button>
           ))}
         </div>
       </div>
 
       <div className="a-content">
-        {tab === "program"  && <ProgramEditor />}
-        {tab === "lineup"   && <LineupEditor />}
-        {tab === "billeder" && <ImagesEditor />}
+        {tab === "program"       && <ProgramEditor />}
+        {tab === "lineup"        && <LineupEditor />}
+        {tab === "hvad"          && <WhatEditor />}
+        {tab === "billeder"      && <ImagesEditor />}
+        {tab === "indstillinger" && <SettingsEditor />}
       </div>
     </div>
   );
@@ -411,6 +413,146 @@ function ImagesEditor() {
       ))}
       <input ref={fileRef} type="file" accept="image/*" style={{ display:"none" }}
         onChange={e => { if (e.target.files[0] && activeSection) upload(activeSection, e.target.files[0]); e.target.value = ""; }} />
+    </div>
+  );
+}
+
+/* ============================================================
+   Hvad-sker-der-editor
+   ============================================================ */
+function WhatEditor() {
+  const [rows,    setRows]    = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    const { data } = await sb.from("what_items").select("*").order("sort_order");
+    setRows(data || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const del = async (id) => {
+    if (!confirm("Slet dette element?")) return;
+    await sb.from("what_items").delete().eq("id", id);
+    setRows(r => r.filter(x => x.id !== id));
+  };
+
+  const save = async (form) => {
+    const payload = { num: form.num, title: form.title, sub: form.sub };
+    if (form.id) {
+      const { data } = await sb.from("what_items").update(payload).eq("id", form.id).select().single();
+      setRows(r => r.map(x => x.id === form.id ? data : x));
+    } else {
+      const { data } = await sb.from("what_items").insert({ ...payload, sort_order: rows.length + 1 }).select().single();
+      setRows(r => [...r, data]);
+    }
+    setEditing(null);
+  };
+
+  return (
+    <div>
+      <div className="a-section-head">
+        <h2>Hvad sker der</h2>
+        <button className="a-btn-primary" onClick={() => setEditing({ num: "", title: "", sub: "" })}>+ Tilføj</button>
+      </div>
+      {loading ? <div className="a-loading">Indlæser...</div> : (
+        <table className="a-table">
+          <thead><tr><th>#</th><th>Titel</th><th>Beskrivelse</th><th></th></tr></thead>
+          <tbody>
+            {rows.map(r => (
+              <tr key={r.id}>
+                <td className="a-mono">{r.num}</td>
+                <td><strong>{r.title}</strong></td>
+                <td className="a-muted">{r.sub}</td>
+                <td>
+                  <div className="a-actions">
+                    <button onClick={() => setEditing({ ...r })}>Rediger</button>
+                    <button className="a-del" onClick={() => del(r.id)}>Slet</button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {rows.length === 0 && (
+              <tr><td colSpan={4} style={{ textAlign:"center", color:"#aaa", padding:32 }}>Ingen elementer endnu.</td></tr>
+            )}
+          </tbody>
+        </table>
+      )}
+      {editing !== null && (
+        <div className="a-overlay" onClick={() => setEditing(null)}>
+          <div className="a-modal" onClick={e => e.stopPropagation()}>
+            <h3>{editing.id ? "Rediger element" : "Nyt element"}</h3>
+            <div className="a-field"><label>Nummer (fx 01)</label><input value={editing.num} onChange={e => setEditing(v => ({ ...v, num: e.target.value }))} placeholder="01" maxLength={3} /></div>
+            <div className="a-field"><label>Titel</label><input value={editing.title} onChange={e => setEditing(v => ({ ...v, title: e.target.value }))} placeholder="Heavy Showtrucks" /></div>
+            <div className="a-field"><label>Beskrivelse</label><textarea value={editing.sub} onChange={e => setEditing(v => ({ ...v, sub: e.target.value }))} rows={3} placeholder="Kort beskrivelse..." /></div>
+            <div className="a-modal-actions">
+              <button className="a-btn-ghost" onClick={() => setEditing(null)}>Annuller</button>
+              <button className="a-btn-primary" onClick={() => save(editing)}>Gem</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ============================================================
+   Indstillinger-editor
+   ============================================================ */
+function SettingsEditor() {
+  const [settings, setSettings] = useState({});
+  const [saving,   setSaving]   = useState(false);
+  const [saved,    setSaved]    = useState(false);
+
+  const FIELDS = [
+    { key: "phone",        label: "Telefonnummer",   placeholder: "33 60 52 74" },
+    { key: "facebook_url", label: "Facebook-link",   placeholder: "https://facebook.com/ølstykke-festival" },
+    { key: "address1",     label: "Adresse linje 1", placeholder: "Stadionvej" },
+    { key: "address2",     label: "Adresse linje 2", placeholder: "3650 Ølstykke" },
+    { key: "ticket_price", label: "Billetpris (kr)", placeholder: "30" },
+  ];
+
+  useEffect(() => {
+    sb.from("site_settings").select("*").then(({ data }) => {
+      const map = {};
+      (data || []).forEach(r => { map[r.key] = r.value; });
+      setSettings(map);
+    });
+  }, []);
+
+  const saveAll = async () => {
+    setSaving(true);
+    const upserts = FIELDS.map(f => ({ key: f.key, value: settings[f.key] || "", label: f.label, updated_at: new Date().toISOString() }));
+    await sb.from("site_settings").upsert(upserts);
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+  };
+
+  return (
+    <div style={{ maxWidth: 560 }}>
+      <div className="a-section-head">
+        <h2>Indstillinger</h2>
+      </div>
+      <p style={{ color:"#888", fontSize:14, marginBottom:24, marginTop:-8 }}>
+        Kontaktoplysninger og basisinfo der vises på hjemmesiden.
+      </p>
+      {FIELDS.map(f => (
+        <div key={f.key} className="a-field">
+          <label>{f.label}</label>
+          <input
+            value={settings[f.key] || ""}
+            onChange={e => setSettings(s => ({ ...s, [f.key]: e.target.value }))}
+            placeholder={f.placeholder}
+          />
+        </div>
+      ))}
+      <button className="a-btn-primary" onClick={saveAll} disabled={saving} style={{ marginTop: 8 }}>
+        {saving ? "Gemmer..." : saved ? "Gemt ✓" : "Gem indstillinger"}
+      </button>
     </div>
   );
 }

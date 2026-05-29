@@ -187,7 +187,7 @@ function Hero({ showCountdown = true }) {
             </a>
           </div>
           {showCountdown && (
-            <div className="counter" style={{ marginTop: 32 }}>
+            <div className="counter" style={{ marginTop: 20 }}>
               <span className="counter-label">[ Nedtælling til portene åbner ]</span>
               <div className="counter-vals">
                 <div className="cell"><span className="num">{String(c.d).padStart(2, "0")}</span><span className="unit">dage</span></div>
@@ -252,6 +252,14 @@ function ReachStrip() {
 
 /* ---------- What's happening ---------- */
 function WhatGrid() {
+  const [items, setItems] = useState(D.whatGrid);
+
+  useEffect(() => {
+    sbFetch("what_items", "select=*&order=sort_order").then(data => {
+      if (data && data.length > 0) setItems(data);
+    });
+  }, []);
+
   return (
     <section className="section" id="hvad">
       <div className="container">
@@ -260,11 +268,11 @@ function WhatGrid() {
             <span className="label label-bracket">01 / Hvad sker der</span>
             <h2>Tre dage<br />med <span className="accent">diesel</span> i blodet</h2>
           </div>
-          <span className="num">[ 08 spor · ét sted ]</span>
+          <span className="num">[ {String(items.length).padStart(2,"0")} spor · ét sted ]</span>
         </div>
         <div className="what-grid">
-          {D.whatGrid.map(c => (
-            <div key={c.num} className="what-cell">
+          {items.map(c => (
+            <div key={c.id || c.num} className="what-cell">
               <div className="accent-dot"></div>
               <div>
                 <div className="what-num">{c.num} / spor</div>
@@ -486,6 +494,24 @@ function TruckCTA() {
 
 /* ---------- Practical ---------- */
 function Practical() {
+  const [s, setS] = useState({});
+
+  useEffect(() => {
+    sbFetch("site_settings", "select=key,value").then(data => {
+      if (data) {
+        const map = {};
+        data.forEach(r => { map[r.key] = r.value; });
+        setS(map);
+      }
+    });
+  }, []);
+
+  const phone  = s.phone        || "33 60 52 74";
+  const fbUrl  = s.facebook_url || "#";
+  const addr1  = s.address1     || "Stadionvej";
+  const addr2  = s.address2     || "3650 Ølstykke";
+  const price  = s.ticket_price || "30";
+
   return (
     <section className="section" id="info">
       <div className="container">
@@ -494,30 +520,30 @@ function Practical() {
             <span className="label label-bracket">06 / Praktisk</span>
             <h2>Find os.<br /><span className="accent">Kontakt os.</span></h2>
           </div>
-          <span className="num">[ Stadionvej · 3650 Ølstykke ]</span>
+          <span className="num">[ {addr1} · {addr2} ]</span>
         </div>
         <div className="practical">
           <div className="p-cell">
             <div className="label label-bracket">Adresse</div>
-            <h4>Stadionvej</h4>
-            <p>3650 Ølstykke<br />Nord­sjælland, Danmark<br /><br />Parkering på pladsen — følg skiltning ind fra Frederiks­sundsvej.</p>
+            <h4>{addr1}</h4>
+            <p>{addr2}<br />Nordsjælland, Danmark<br /><br />Parkering på pladsen — følg skiltning ind fra Frederikssundsvej.</p>
           </div>
           <div className="p-cell">
             <div className="label label-bracket">Kontakt</div>
             <h4>Vi svarer hurtigt</h4>
-            <a className="line" href="tel:+4533605274">Telefon · 33 60 52 74</a>
-            <a className="line" href="#">Messenger · ØBM på Facebook</a>
+            <a className="line" href={`tel:+45${phone.replace(/\s/g,"")}`}>Telefon · {phone}</a>
+            <a className="line" href={fbUrl} target="_blank" rel="noopener">Messenger · ØBM på Facebook</a>
             <p style={{ marginTop: 10 }}>Helst på Messenger — så får alle frivillige beskeden.</p>
           </div>
           <div className="p-cell">
             <div className="label label-bracket">Billetter</div>
-            <h4>30 kr · alle 3 dage</h4>
+            <h4>{price} kr · alle 3 dage</h4>
             <p>Børn under 12 år gratis i følge med voksen.<br /><br />Køb online eller i indgangen — vi anbefaler online for hurtig adgang.</p>
           </div>
           <div className="p-cell">
             <div className="label label-bracket">For familien</div>
             <h4>Hele dagen, hele weekenden</h4>
-            <p>Kræmmer­marked, tivoli, madboder og børne­aktiviteter. Gratis for børn under 12 år ifølge med voksen.</p>
+            <p>Kræmmermarked, tivoli, madboder og børneaktiviteter. Gratis for børn under 12 år ifølge med voksen.</p>
           </div>
         </div>
       </div>
