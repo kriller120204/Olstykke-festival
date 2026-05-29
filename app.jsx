@@ -12,7 +12,12 @@ const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 async function sbFetch(table, params = "") {
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
-      headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` },
+      headers: {
+        apikey: SUPABASE_ANON,
+        Authorization: `Bearer ${SUPABASE_ANON}`,
+        "Cache-Control": "no-cache",
+      },
+      cache: "no-store",
     });
     if (!res.ok) return null;
     return res.json();
