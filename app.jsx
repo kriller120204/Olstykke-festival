@@ -334,7 +334,7 @@ function Lineup() {
               <div className="line-tag">{l.tag}</div>
               <div className="line-img">
                 {l.imageUrl
-                  ? <img src={l.imageUrl} alt={l.name} style={{ width:"100%", height:"100%", objectFit:"cover", display:"block" }} />
+                  ? <img src={l.imageUrl} alt={l.name} />
                   : <ImgPH label={l.imgLabel} icon={l.icon} />
                 }
               </div>
@@ -453,7 +453,7 @@ function Voting() {
             <span className="label label-bracket">04 / Truckspotters' afstemning</span>
             <h2>Hvilken er<br /><span className="accent">ØBM's fedeste</span> bil?</h2>
           </div>
-          <span className="num">[ stem én gang · vindes lørdag 22:00 ]</span>
+          <span className="num">[ Vi finder ØBM's fedeste bil lørdag aften ]</span>
         </div>
         <div className="vote-grid">
           {options.map(o => {
