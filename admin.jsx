@@ -79,7 +79,7 @@ function Dashboard({ onLogout }) {
 
       <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%" }}>
         <div className="a-tabs">
-          {[["program","Program"],["lineup","Lineup"],["afstemning","Afstemning"],["hvad","Hvad sker der"],["billeder","Billeder"],["indstillinger","Indstillinger"]].map(([k, l]) => (
+          {[["program","Program"],["lineup","Biler/Lastbiler"],["afstemning","Afstemning"],["hvad","Hvad sker der"],["billeder","Billeder"],["indstillinger","Indstillinger"]].map(([k, l]) => (
             <button key={k} className={"a-tab" + (tab === k ? " active" : "")} onClick={() => setTab(k)}>{l}</button>
           ))}
         </div>
