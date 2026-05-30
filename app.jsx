@@ -90,7 +90,7 @@ function Topbar() {
         </a>
         <nav className="nav">
           {links.map(l => <a key={l.href} href={l.href}>{l.label}</a>)}
-          <a className="nav-cta" href="#billet">Køb billet — 30 kr <span>→</span></a>
+          <a className="nav-cta" href="https://tikkio.com/events/64286" target="_blank" rel="noopener">Køb billet — 30 kr <span>→</span></a>
         </nav>
         <button
           className={"hamburger" + (open ? " open" : "")}
@@ -105,7 +105,7 @@ function Topbar() {
           {links.map(l => (
             <a key={l.href} href={l.href} onClick={close}>{l.label}</a>
           ))}
-          <a className="mobile-cta" href="#billet" onClick={close}>
+          <a className="mobile-cta" href="https://tikkio.com/events/64286" target="_blank" rel="noopener" onClick={close}>
             Køb billet — 30 kr →
           </a>
         </nav>
@@ -190,7 +190,7 @@ function Hero({ showCountdown = true }) {
             </div>
           </div>
           <div className="hero-cta-row">
-            <a href="#billet" className="btn btn-primary btn-xl">
+            <a href="https://tikkio.com/events/64286" target="_blank" rel="noopener" className="btn btn-primary btn-xl">
               Køb billet — 30 kr <span className="arrow">→</span>
             </a>
             <a href="#program" className="btn btn-ghost">
@@ -595,7 +595,7 @@ function Footer() {
           </div>
           <div className="foot-col">
             <h5>Festival</h5>
-            <a href="#billet">Køb billet</a>
+            <a href="https://tikkio.com/events/64286" target="_blank" rel="noopener">Køb billet</a>
             <a href="#program">Program</a>
             <a href="#lineup">Lineup</a>
             <a href="#afstemning">Afstemning</a>
