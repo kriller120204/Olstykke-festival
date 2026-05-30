@@ -9,6 +9,8 @@ const Billet = window.Billet;
 const SUPABASE_URL  = "https://zxbmaadxsjeyksbqdwyx.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4Ym1hYWR4c2pleWtzYnFkd3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MDk3NDcsImV4cCI6MjA5NTI4NTc0N30.r6JdDygRKtHi0J46O9uicQ-oN8mxxBFbQt4LyEAdkIg";
 
+function timeSort(t) { const h = parseInt(t || "0"); return h < 6 ? h + 24 : h; }
+
 async function sbPost(table, body) {
   try {
     await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
@@ -373,13 +375,14 @@ function Program() {
   const [liveProgram, setLiveProgram] = useState(null);
 
   useEffect(() => {
-    sbFetch("program_items", "select=*&order=time_str").then(data => {
+    sbFetch("program_items", "select=*").then(data => {
       if (!data || data.length === 0) return;
       const grouped = {};
       data.forEach(r => {
         if (!grouped[r.day]) grouped[r.day] = { day: r.day.toUpperCase(), date: D.program[r.day]?.date || "", rows: [] };
         grouped[r.day].rows.push({ time: r.time_str, title: r.title, sub: r.sub, tag: r.tag });
       });
+      Object.values(grouped).forEach(g => g.rows.sort((a, b) => timeSort(a.time) - timeSort(b.time)));
       setLiveProgram(grouped);
     });
   }, []);

@@ -2,6 +2,7 @@
    ØBM Admin — indholdsredigering
    ============================================================ */
 const { useState, useEffect, useRef } = React;
+function timeSort(t) { const h = parseInt(t || "0"); return h < 6 ? h + 24 : h; }
 
 const SUPABASE_URL  = "https://zxbmaadxsjeyksbqdwyx.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4Ym1hYWR4c2pleWtzYnFkd3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MDk3NDcsImV4cCI6MjA5NTI4NTc0N30.r6JdDygRKtHi0J46O9uicQ-oN8mxxBFbQt4LyEAdkIg";
@@ -108,8 +109,8 @@ function ProgramEditor() {
 
   const load = async () => {
     setLoading(true);
-    const { data } = await sb.from("program_items").select("*").eq("day", day).order("time_str");
-    setRows(data || []);
+    const { data } = await sb.from("program_items").select("*").eq("day", day);
+    setRows((data || []).sort((a, b) => timeSort(a.time_str) - timeSort(b.time_str)));
     setLoading(false);
   };
 
@@ -127,7 +128,7 @@ function ProgramEditor() {
       setRows(r => r.map(x => x.id === form.id ? data : x));
     } else {
       const { data } = await sb.from("program_items").insert({ ...form, day, sort_order: 0 }).select().single();
-      setRows(r => [...r, data].sort((a, b) => a.time_str.localeCompare(b.time_str)));
+      setRows(r => [...r, data].sort((a, b) => timeSort(a.time_str) - timeSort(b.time_str)));
     }
     setEditing(null);
   };
