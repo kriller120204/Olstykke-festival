@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://olstykke-festival.vercel.app/sitemap.xml
+Sitemap: https://obmfestival.dk/sitemap.xml
