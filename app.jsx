@@ -9,6 +9,21 @@ const Billet = window.Billet;
 const SUPABASE_URL  = "https://zxbmaadxsjeyksbqdwyx.supabase.co";
 const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4Ym1hYWR4c2pleWtzYnFkd3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MDk3NDcsImV4cCI6MjA5NTI4NTc0N30.r6JdDygRKtHi0J46O9uicQ-oN8mxxBFbQt4LyEAdkIg";
 
+async function sbPost(table, body) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_ANON,
+        Authorization: `Bearer ${SUPABASE_ANON}`,
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal",
+      },
+      body: JSON.stringify(body),
+    });
+  } catch {}
+}
+
 async function sbFetch(table, params = "") {
   try {
     const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
@@ -420,29 +435,31 @@ function Program() {
 /* ---------- Voting ---------- */
 function Voting() {
   const [options, setOptions] = useState(D.voteOptions);
-  const [votes,   setVotes]   = useState({});
-  const [voted,   setVoted]   = useState(null);
+  const [counts,  setCounts]  = useState({});
+  const [voted,   setVoted]   = useState(() => {
+    try { return localStorage.getItem("obm-voted") || null; } catch { return null; }
+  });
+
+  const total = useMemo(() => Math.max(Object.values(counts).reduce((a, b) => a + b, 0), 1), [counts]);
 
   useEffect(() => {
     sbFetch("vote_options", "select=*&order=sort_order").then(data => {
-      if (data && data.length > 0) {
-        setOptions(data);
-        setVotes(data.reduce((acc, v) => ({ ...acc, [v.id]: 0 }), {}));
-      } else {
-        setVotes(D.voteOptions.reduce((acc, v) => ({ ...acc, [v.id]: v.pct }), {}));
-      }
+      if (data && data.length > 0) setOptions(data);
+    });
+    sbFetch("votes", "select=option_id").then(data => {
+      if (!data) return;
+      const c = {};
+      data.forEach(v => { c[v.option_id] = (c[v.option_id] || 0) + 1; });
+      setCounts(c);
     });
   }, []);
 
-  const total = useMemo(() => {
-    const vals = Object.values(votes);
-    return vals.length ? vals.reduce((a, b) => a + b, 0) || 1 : 1;
-  }, [votes]);
-
-  const cast = (id) => {
+  const cast = async (id) => {
     if (voted) return;
-    setVotes(v => ({ ...v, [id]: (v[id] || 0) + 6 }));
+    setCounts(c => ({ ...c, [id]: (c[id] || 0) + 1 }));
     setVoted(id);
+    try { localStorage.setItem("obm-voted", id); } catch {}
+    await sbPost("votes", { option_id: id });
   };
 
   return (
@@ -457,7 +474,7 @@ function Voting() {
         </div>
         <div className="vote-grid">
           {options.map(o => {
-            const pct = Math.round(((votes[o.id] || 0) / total) * 100);
+            const pct = Math.round(((counts[o.id] || 0) / total) * 100);
             return (
               <button
                 key={o.id}
