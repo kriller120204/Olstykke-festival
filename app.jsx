@@ -562,7 +562,7 @@ function Practical() {
   }, []);
 
   const phone  = s.phone        || "33 60 52 74";
-  const fbUrl  = s.facebook_url || "#";
+  const fbUrl  = s.facebook_url || "https://www.facebook.com/profile.php?id=61589298855212";
   const addr1  = s.address1     || "Stadionvej";
   const addr2  = s.address2     || "3650 Ølstykke";
   const price  = s.ticket_price || "30";
