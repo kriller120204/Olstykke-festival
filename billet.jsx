@@ -44,10 +44,17 @@ function Billet() {
               </div>
               <div className="lprice">99<span className="kr">kr</span></div>
             </div>
+            <div className="row">
+              <div>
+                <div className="ltype">Udstiller</div>
+                <div className="ldesc">Bil/lastbil på pladsen</div>
+              </div>
+              <div className="lprice">400<span className="kr">kr</span></div>
+            </div>
           </div>
 
           <a href={TIKKIO_URL} target="_blank" rel="noopener" className="btn-tikkio billet-cta-btn">
-            Køb billet — 30 kr <span className="arrow">→</span>
+            Køb billetter <span className="arrow">→</span>
           </a>
 
           <div className="tikkio-trust">
