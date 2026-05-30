@@ -445,6 +445,11 @@ function Voting() {
 
   const total = useMemo(() => Math.max(Object.values(counts).reduce((a, b) => a + b, 0), 1), [counts]);
 
+  const sortedOptions = useMemo(
+    () => [...options].sort((a, b) => (counts[b.id] || 0) - (counts[a.id] || 0)),
+    [options, counts]
+  );
+
   useEffect(() => {
     sbFetch("vote_options", "select=*&order=sort_order").then(data => {
       if (data && data.length > 0) setOptions(data);
@@ -476,7 +481,7 @@ function Voting() {
           <span className="num">[ Vi finder ØBM's fedeste bil lørdag aften ]</span>
         </div>
         <div className="vote-grid">
-          {options.map(o => {
+          {sortedOptions.map(o => {
             const pct = Math.round(((counts[o.id] || 0) / total) * 100);
             return (
               <button
