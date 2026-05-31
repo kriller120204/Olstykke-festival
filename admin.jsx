@@ -382,6 +382,12 @@ function ImagesEditor() {
     });
   }, []);
 
+  const remove = async (section) => {
+    if (!confirm("Fjern billede?")) return;
+    await sb.from("site_images").delete().eq("section", section);
+    setImages(i => { const n = { ...i }; delete n[section]; return n; });
+  };
+
   const upload = async (section, file) => {
     setUploading(section);
     const path = `site/${section}-${Date.now()}-${file.name}`;
@@ -417,11 +423,18 @@ function ImagesEditor() {
               <a href={images[s.key]} target="_blank" style={{ fontSize:12, color:"#e63946", marginTop:8, display:"block" }}>Se nuværende billede →</a>
             )}
           </div>
-          <div className="a-img-upload-lg" onClick={() => { setActiveSection(s.key); fileRef.current.click(); }}>
-            {images[s.key]
-              ? <img src={images[s.key]} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt={s.label} />
-              : <span>{uploading === s.key ? "Uploader..." : "Klik for at uploade"}</span>
-            }
+          <div style={{ display:"flex", flexDirection:"column", gap:8, alignItems:"flex-end" }}>
+            <div className="a-img-upload-lg" onClick={() => { setActiveSection(s.key); fileRef.current.click(); }}>
+              {images[s.key]
+                ? <img src={images[s.key]} style={{ width:"100%", height:"100%", objectFit:"cover" }} alt={s.label} />
+                : <span>{uploading === s.key ? "Uploader..." : "Klik for at uploade"}</span>
+              }
+            </div>
+            {images[s.key] && (
+              <button className="a-btn a-btn-del" style={{ padding:"4px 12px", fontSize:12 }} onClick={() => remove(s.key)}>
+                Fjern billede
+              </button>
+            )}
           </div>
         </div>
       ))}
