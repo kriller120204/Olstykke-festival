@@ -11,6 +11,12 @@ const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 
 function timeSort(t) { const h = parseInt(t || "0"); return h < 6 ? h + 24 : h; }
 
+function imgUrl(url, width = 800, quality = 75) {
+  if (!url || !url.includes("/storage/v1/object/public/")) return url;
+  return url.replace("/storage/v1/object/public/", "/storage/v1/render/image/public/")
+    + `?width=${width}&quality=${quality}`;
+}
+
 async function sbPost(table, body) {
   try {
     await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
@@ -167,7 +173,7 @@ function Hero({ showCountdown = true }) {
   }, []);
 
   const heroStyle = heroImg ? {
-    backgroundImage: `linear-gradient(rgba(11,10,9,0.55), rgba(11,10,9,0.55)), url(${heroImg})`,
+    backgroundImage: `linear-gradient(rgba(11,10,9,0.55), rgba(11,10,9,0.55)), url(${imgUrl(heroImg, 1600, 75)})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
   } : {};
@@ -351,7 +357,7 @@ function Lineup() {
               <div className="line-tag">{l.tag}</div>
               <div className="line-img">
                 {l.imageUrl
-                  ? <img src={l.imageUrl} alt={l.name} />
+                  ? <img src={imgUrl(l.imageUrl, 400)} alt={l.name} />
                   : <ImgPH label={l.imgLabel} icon={l.icon} />
                 }
               </div>
@@ -492,7 +498,7 @@ function Voting() {
                 <div className="vote-stamp">Stemt!</div>
                 <div className="vote-img">
                   {o.image_url
-                    ? <img src={o.image_url} alt={o.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    ? <img src={imgUrl(o.image_url, 400)} alt={o.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                     : <ImgPH label={o.img || o.name} />
                   }
                 </div>
