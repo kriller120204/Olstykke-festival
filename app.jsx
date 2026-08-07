@@ -137,6 +137,16 @@ function Topbar() {
   );
 }
 
+/* ---------- Parking price bubble (fixed, altid synlig) ---------- */
+function ParkingBadge() {
+  return (
+    <a href="#info" className="parking-bubble" aria-label="Parkering koster 25 kr — se praktisk info">
+      <span className="pb-top">Parkering</span>
+      <span className="pb-price">25 kr</span>
+    </a>
+  );
+}
+
 /* ---------- Image placeholder (striped + label) ---------- */
 function ImgPH({ label, icon }) {
   return (
@@ -587,7 +597,7 @@ function Practical() {
           <div className="p-cell">
             <div className="label label-bracket">Adresse</div>
             <h4>{addr1}</h4>
-            <p>{addr2}<br />Nordsjælland, Danmark<br /><br />Parkering på pladsen — følg skiltning ind fra Frederikssundsvej.</p>
+            <p>{addr2}<br />Nordsjælland, Danmark<br /><br />Parkering på pladsen — 25 kr — følg skiltning ind fra Frederikssundsvej.</p>
           </div>
           <div className="p-cell">
             <div className="label label-bracket">Kontakt</div>
@@ -676,6 +686,7 @@ function App() {
   return (
     <>
       <Topbar />
+      <ParkingBadge />
       <HeroWrapped t={t} />
       <Marquee />
       <div className="hazard hazard-red"></div>
