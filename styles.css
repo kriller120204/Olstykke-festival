@@ -342,13 +342,13 @@ img { display: block; max-width: 100%; }
 }
 .sticker small { display: block; font-family: var(--ff-mono); font-size: 10px; letter-spacing: 0.16em; margin-top: 4px; font-weight: 600; }
 
-/* floating parking-price bubble, fixed bottom-right of viewport */
+/* floating parking-price bubble, fixed top-right of viewport, under the sticky topbar */
 .parking-bubble {
   position: fixed;
-  right: 20px;
-  bottom: 20px;
+  right: 24px;
+  top: 92px;
   z-index: 45;
-  width: 104px; height: 104px;
+  width: 140px; height: 140px;
   border-radius: 50%;
   background: var(--gold);
   color: #0b0a09;
@@ -367,21 +367,21 @@ img { display: block; max-width: 100%; }
 .parking-bubble:hover { transform: rotate(-10deg) scale(1.07); }
 .parking-bubble .pb-top {
   font-family: var(--ff-mono);
-  font-size: 9px;
+  font-size: 10.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 700;
 }
 .parking-bubble .pb-price {
   font-family: var(--ff-display);
-  font-size: 25px;
+  font-size: 33px;
   letter-spacing: 0.01em;
-  margin-top: 3px;
+  margin-top: 4px;
 }
 @media (max-width: 640px) {
-  .parking-bubble { width: 76px; height: 76px; right: 14px; bottom: 14px; }
-  .parking-bubble .pb-top { font-size: 7.5px; }
-  .parking-bubble .pb-price { font-size: 18px; }
+  .parking-bubble { width: 96px; height: 96px; right: 14px; top: 76px; }
+  .parking-bubble .pb-top { font-size: 8px; }
+  .parking-bubble .pb-price { font-size: 22px; }
 }
 
 /* counter */
