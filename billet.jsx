@@ -24,7 +24,7 @@ function Billet() {
             <div className="row">
               <div>
                 <div className="ltype">Festivalsbillet</div>
-                <div className="ldesc">Adgang alle 3 dage</div>
+                <div className="ldesc">Pr. dag</div>
               </div>
               <div className="lprice">30<span className="kr">kr</span></div>
             </div>
