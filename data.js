@@ -2,12 +2,16 @@
    ØLSTYKKE BY & MOTORFESTIVAL — content data
    ============================================================ */
 window.OBM_DATA = {
-  // Sæt til en sti/URL for at vise et hero-billede, fx "images/hero.jpg"
-  heroImage: null,
+  heroImage: "images/01-oversigt-solnedgang.jpg",
 
-  // Foto-galleri — læg filer i /images og tilføj dem her, fx:
-  // { src: "images/01.jpg", alt: "Lastbiler på pladsen ved solnedgang" }
-  gallery: [],
+  // Foto-galleri — vises som en stor billedstak der kører ned af siden
+  gallery: [
+    { src: "images/01-oversigt-solnedgang.jpg", alt: "Luftfoto over pladsen ved solnedgang — lastbiler og tusindvis af gæster" },
+    { src: "images/02-dag-scene.jpg", alt: "Gæster foran scenen i dagslys" },
+    { src: "images/03-maengde-aften.jpg", alt: "Mængden samlet foran scenen i aftensolen" },
+    { src: "images/04-bar-nat.jpg", alt: "Baren om aftenen med lys og røg i baggrunden" },
+    { src: "images/05-lastbiler-nat.jpg", alt: "Lastbilkonvojen om natten med pariserhjulet i baggrunden" },
+  ],
 
   whatGrid: [
     { num: "01", title: "Heavy Showtrucks", sub: "Chrome, lyssætning og lyd der vibrerer i brystkassen." },

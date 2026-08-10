@@ -112,13 +112,13 @@ function ImgPH({ label, icon }) {
 function Hero({ heroImage } = {}) {
   const img = heroImage || D.heroImage;
   const heroStyle = img ? {
-    backgroundImage: `linear-gradient(rgba(11,10,9,0.55), rgba(11,10,9,0.55)), url(${imgUrl(img, 1600, 75)})`,
+    backgroundImage: `linear-gradient(180deg, rgba(11,10,9,0.55) 0%, rgba(11,10,9,0.72) 55%, rgba(11,10,9,0.92) 100%), url(${imgUrl(img, 1800, 78)})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
   } : {};
 
   return (
-    <section className="hero" id="top" style={heroStyle}>
+    <section className="hero hero-photo" id="top" style={heroStyle}>
       <div className="hero-grid">
         <div className="hero-left">
           <div className="hero-eyebrow">
@@ -126,12 +126,12 @@ function Hero({ heroImage } = {}) {
             <span className="label">[ ØBM · 4. udgave · Stadionvej, Ølstykke ]</span>
           </div>
           <h1 className="hero-title">
-            <span className="row">Tak for</span>
-            <span className="row outline">ØBM</span>
-            <span className="row"><span className="accent">2026</span></span>
+            <span className="row">Tusind tak</span>
+            <span className="row outline">for</span>
+            <span className="row">ØBM <span className="accent">2026</span></span>
           </h1>
           <p className="hero-tag">
-            Det blev <span className="strike">for stort</span> for vildt.
+            Det blev <span className="strike">for stort</span> for vildt — tak fordi 12.000 af jer viste op og gjorde 2026 til den vildeste udgave af ØBM nogensinde.
           </p>
           <div className="hero-meta">
             <div>
@@ -165,6 +165,35 @@ function Hero({ heroImage } = {}) {
   );
 }
 
+/* ---------- Tak-for-i-år tal (stor) ---------- */
+function ThanksStats() {
+  const stats = [
+    { num: "12.000", label: "gæster på pladsen" },
+    { num: "320", label: "lastbiler" },
+    { num: "20", label: "udstillere" },
+    { num: "3", label: "dage i træk" },
+    { num: "4.", label: "udgave af ØBM" },
+  ];
+  return (
+    <div className="thanks-stats">
+      <div className="container">
+        <div className="thanks-head">
+          <span className="label label-bracket">Tak for i år</span>
+          <h2>I gjorde det<br />til noget <span className="accent">helt særligt</span></h2>
+        </div>
+        <div className="reach-grid">
+          {stats.map((s, i) => (
+            <div key={i} className="reach-cell">
+              <div className="big-num">{s.num}</div>
+              <div className="label label-bracket" style={{ marginTop: 10 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ---------- Marquee ---------- */
 function Marquee() {
   const items = [
@@ -187,31 +216,6 @@ function Marquee() {
   );
 }
 
-/* ---------- Reach stats strip ---------- */
-function ReachStrip() {
-  const stats = [
-    { num: "12.000", label: "gæster" },
-    { num: "320", label: "lastbiler" },
-    { num: "20", label: "udstillere" },
-    { num: "3", label: "dage festival" },
-    { num: "4.", label: "udgave af ØBM" },
-  ];
-  return (
-    <div className="section section-tight" style={{ paddingTop: 56, paddingBottom: 56 }}>
-      <div className="container">
-        <div className="reach-grid">
-          {stats.map((s, i) => (
-            <div key={i} className="reach-cell">
-              <div className="label label-bracket" style={{ marginBottom: 10 }}>{s.label}</div>
-              <div className="big-num">{s.num}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ---------- Foto-galleri ---------- */
 function Gallery() {
   const photos = D.gallery || [];
@@ -227,13 +231,14 @@ function Gallery() {
           </div>
           <span className="num">[ {photos.length} billeder · ØBM 2026 ]</span>
         </div>
-        <div className="gallery-grid">
-          {photos.map((p, i) => (
-            <div className="gallery-cell" key={i}>
-              <img src={p.src} alt={p.alt || "ØBM 2026"} loading="lazy" />
-            </div>
-          ))}
-        </div>
+      </div>
+      <div className="gallery-stack">
+        {photos.map((p, i) => (
+          <div className="gallery-item" key={i}>
+            <img src={p.src} alt={p.alt || "ØBM 2026"} loading="lazy" />
+            <span className="gallery-num">{String(i + 1).padStart(2, "0")} / {String(photos.length).padStart(2, "0")}</span>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -310,18 +315,18 @@ function Lineup() {
 /* ---------- Næste år (teaser) ---------- */
 function NextYear() {
   return (
-    <section className="section section-tight" id="klar-2027">
-      <div className="container">
-        <div className="truck-cta">
-          <div className="tc-lhs">
-            <div className="label label-bracket" style={{ marginBottom: 10 }}>Allerede i gang</div>
-            <h4>Vi gør nu klar til 2027 🚛</h4>
-            <p>ØBM 2026 er lige overstået, og vi er allerede i gang med at planlægge næste udgave. Følg med på Facebook, så du er den første der hører om datoer og nyheder.</p>
-          </div>
-          <a className="btn btn-ghost" href="https://www.facebook.com/profile.php?id=61589298855212" target="_blank" rel="noopener">
-            Følg os på Facebook <span className="arrow">→</span>
-          </a>
-        </div>
+    <section className="next-year" id="klar-2027">
+      <div className="container next-year-inner">
+        <div className="ny-eyebrow">[ Allerede i gang ]</div>
+        <h2 className="ny-headline">
+          Vi går i gang med<br />planlægningen af <span className="ny-pop">ØBM 2027</span><br />allerede nu 🚛
+        </h2>
+        <p className="ny-sub">
+          ØBM 2026 er lige overstået, og vi er i fuld gang med at planlægge næste udgave. Følg med på Facebook, så du er den første der hører om datoer og nyheder.
+        </p>
+        <a className="btn ny-cta" href="https://www.facebook.com/profile.php?id=61589298855212" target="_blank" rel="noopener">
+          Følg os på Facebook <span className="arrow">→</span>
+        </a>
       </div>
     </section>
   );
@@ -433,6 +438,7 @@ function App() {
     <>
       <Topbar />
       <HeroWrapped />
+      <ThanksStats />
       <Marquee />
       <div className="hazard hazard-red"></div>
       <Gallery />
