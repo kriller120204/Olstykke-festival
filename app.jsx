@@ -1,11 +1,9 @@
 /* ============================================================
    ØLSTYKKE BY & MOTORFESTIVAL — App
    ============================================================ */
-const { useState, useEffect, useMemo } = React;
+const { useState, useEffect } = React;
 const D = window.OBM_DATA;
 const Billet = window.Billet;
-
-function timeSort(t) { const h = parseInt(t || "0"); return h < 6 ? h + 24 : h; }
 
 // Billeder er lokale filer i /images — funktionen findes stadig hvis en
 // Supabase Storage-URL nogensinde bruges igen, men rører ikke lokale stier.
@@ -61,7 +59,6 @@ function Topbar() {
   const [open, setOpen] = useState(false);
   const links = [
     { href: "#galleri", label: "Billeder" },
-    { href: "#program", label: "Program" },
     { href: "#lineup", label: "Lineup" },
     { href: "#info", label: "Praktisk" },
   ];
@@ -158,8 +155,8 @@ function Hero({ heroImage } = {}) {
             <a href="#galleri" className="btn btn-primary btn-xl">
               Se billederne <span className="arrow">→</span>
             </a>
-            <a href="#program" className="btn btn-ghost">
-              Se programmet <span className="arrow">→</span>
+            <a href="#lineup" className="btn btn-ghost">
+              Se lineup <span className="arrow">→</span>
             </a>
           </div>
         </div>
@@ -310,59 +307,6 @@ function Lineup() {
   );
 }
 
-/* ---------- Program (3-day) ---------- */
-function Program() {
-  const program = D.program;
-  const days = Object.keys(program);
-  const [active, setActive] = useState("Lørdag");
-
-  const data = program[active] || program[Object.keys(program)[0]];
-  return (
-    <section className="section" id="program" style={{ background: "var(--bg-2)", borderTop: "1px solid var(--line)", borderBottom: "1px solid var(--line)" }}>
-      <div className="container">
-        <div className="section-head">
-          <div className="lhs">
-            <span className="label label-bracket">04 / Sådan gik det</span>
-            <h2>Tre dage,<br />ét <span className="accent">program</span></h2>
-          </div>
-          <span className="num">[ 07 — 09 AUG 2026 ]</span>
-        </div>
-        <div className="program">
-          <div className="day-tabs">
-            {days.map(d => (
-              <button
-                key={d}
-                className={"day-tab" + (active === d ? " active" : "")}
-                onClick={() => setActive(d)}
-              >
-                <span className="d-day">{d}</span>
-                <span className="d-num">{D.program[d].date.split(" · ")[0]}</span>
-                <span className="d-name">August 2026</span>
-              </button>
-            ))}
-          </div>
-          <div className="program-panel">
-            <div className="program-head">
-              <span className="head-day">{data.day}</span>
-              <span className="head-date">{data.date}</span>
-            </div>
-            {data.rows.map((r, i) => (
-              <div className="prog-row" key={i}>
-                <div className="prog-time">{r.time}</div>
-                <div>
-                  <div className="prog-title">{r.title}</div>
-                  <div className="prog-sub">{r.sub}</div>
-                </div>
-                {r.tag && <div className={"prog-tag" + (r.tag === "HOT" ? " hot" : "")}>{r.tag}</div>}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ---------- Næste år (teaser) ---------- */
 function NextYear() {
   return (
@@ -395,7 +339,7 @@ function Practical() {
       <div className="container">
         <div className="section-head">
           <div className="lhs">
-            <span className="label label-bracket">06 / Praktisk</span>
+            <span className="label label-bracket">04 / Praktisk</span>
             <h2>Find os.<br /><span className="accent">Kontakt os.</span></h2>
           </div>
           <span className="num">[ {addr1} · {addr2} ]</span>
@@ -444,7 +388,6 @@ function Footer() {
           <div className="foot-col">
             <h5>Festival</h5>
             <a href="#galleri">Billeder</a>
-            <a href="#program">Program</a>
             <a href="#lineup">Lineup</a>
             <a href="#klar-2027">2027</a>
           </div>
@@ -495,7 +438,6 @@ function App() {
       <Gallery />
       <WhatGrid />
       <Lineup />
-      <Program />
       <NextYear />
       <div className="hazard"></div>
       <Billet />

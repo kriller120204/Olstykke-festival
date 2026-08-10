@@ -71,48 +71,6 @@ window.OBM_DATA = {
     },
   ],
 
-  program: {
-    Fredag: {
-      date: "07 · AUG · 2026",
-      day: "FREDAG",
-      rows: [
-        { time: "16:00", title: "Portene åbner", sub: "Velkomst, indkørsel og opbygning på pladsen.", tag: "ÅBEN" },
-        { time: "17:00", title: "Indkørsel showtrucks", sub: "De første showtrucks tager plads — lys og lyd tjekkes.", tag: "" },
-        { time: "18:30", title: "Velkomst & lyssætning", sub: "Officiel åbning af ØBM 2026 — så går lyset.", tag: "OFFICIEL" },
-        { time: "19:00", title: "Fællesspisning", sub: "Holstedt Pøllegris fyrer op — tilmelding kræves.", tag: "TILMELDING" },
-        { time: "20:30", title: "Live på scenen", sub: "Aftenens første band — rock og varme toner.", tag: "LIVE" },
-        { time: "23:00", title: "Slut for i aften", sub: "Vi tørrer chromen af og ses imorgen.", tag: "" },
-      ],
-    },
-    Lørdag: {
-      date: "08 · AUG · 2026",
-      day: "LØRDAG",
-      rows: [
-        { time: "09:00", title: "Portene åbner", sub: "Lørdag = hoved­dagen. Ingen forsinkelser.", tag: "ÅBEN" },
-        { time: "10:00", title: "Lastbil­udstilling", sub: "320 lastbiler — fra Scania til specialbyg.", tag: "HOT" },
-        { time: "11:30", title: "Trucktour gennem byen", sub: "Konvojen drøner gennem Ølstykke. Sig hej fra fortovet.", tag: "RUTE" },
-        { time: "13:00", title: "Lowrider Show", sub: "Hilde's Custom Garage tager scenen — hydraulics på fuldt blus.", tag: "HOT" },
-        { time: "14:30", title: "Motorcykel-parade", sub: "To hjul, fuld gas. Motorcyklerne tager turen rundt.", tag: "" },
-        { time: "16:00", title: "Truckspotters' afstemning", sub: "Du bestemmer — Danmarks fedeste bil afsløres senere.", tag: "AFSTEMNING" },
-        { time: "18:00", title: "Aftenshow & live musik", sub: "Hovedscenen tændes. Mad og fadøl flyder.", tag: "LIVE" },
-        { time: "22:00", title: "Danmarks Fedeste Bil 2026", sub: "Resultatet afsløres på hovedscenen. Pokal og bragelarm.", tag: "HOT" },
-        { time: "24:00", title: "Slut", sub: "God nat, motor-Danmark.", tag: "" },
-      ],
-    },
-    Søndag: {
-      date: "09 · AUG · 2026",
-      day: "SØNDAG",
-      rows: [
-        { time: "10:00", title: "Portene åbner", sub: "Familie­dagen — roligere tempo, samme entusiasme.", tag: "ÅBEN" },
-        { time: "11:00", title: "Børnenes time", sub: "Tuk Tuk-tur med Sander fra Sorø, ansigtsmaling og lege.", tag: "FAMILIE" },
-        { time: "12:00", title: "Veteranbil-show", sub: "Klassikere og specialkøretøjer på pladsen.", tag: "" },
-        { time: "14:00", title: "Familiebrunch", sub: "Sammen-spisning på det lange bord.", tag: "MAD" },
-        { time: "16:00", title: "Præmieoverrækkelse", sub: "Alle priser uddeles — best paint, best build, publikums­valg.", tag: "OFFICIEL" },
-        { time: "18:00", title: "Festivalen lukker", sub: "Tak fordi I kom. Vi ses i 2027.", tag: "" },
-      ],
-    },
-  },
-
   // Vinderen af "Danmarks Fedeste Bil 2026" afgøres af en dommer —
   // resultatet er ikke klar endnu og tilføjes her, når det er.
 };
