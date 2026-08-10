@@ -1,8 +1,6 @@
 /* ============================================================
-   ØLSTYKKE BY & MOTORFESTIVAL — Billetter via Tikkio
+   ØLSTYKKE BY & MOTORFESTIVAL — Billetter (2026 afholdt, salg lukket)
    ============================================================ */
-
-const TIKKIO_URL = "https://tikkio.com/events/64286";
 
 function Billet() {
   return (
@@ -10,16 +8,16 @@ function Billet() {
       <div className="container">
         <div className="section-head">
           <div className="lhs">
-            <span className="label label-bracket">Køb billet · 30 kr</span>
-            <h2>Vi ses<br />på <span className="accent">pladsen</span></h2>
+            <span className="label label-bracket">Billetsalg 2026 · lukket</span>
+            <h2>Sådan var<br />prisen i <span className="accent">2026</span></h2>
           </div>
           <span className="num">[ 07 — 09 AUG · Stadionvej, Ølstykke ]</span>
         </div>
 
         <div className="billet-centered">
-          <h3>Én pris.<br />Hele weekenden.</h3>
+          <h3>Billetsalget<br />er lukket.</h3>
           <p className="lead">
-            Vi holder entréen lav — 30 kr giver dig adgang til alle tre dage, alle showene, hele showtruck-pladsen og hele kræmmermarkedet.
+            Festivalen er afholdt for i år — tak til alle der var med. Her er priserne, som en hilsen til dem der spørger — nye priser og billetter kommer, når vi åbner salget til 2027.
           </p>
 
           <div className="billet-pricing">
@@ -53,15 +51,9 @@ function Billet() {
             </div>
           </div>
 
-          <a href={TIKKIO_URL} target="_blank" rel="noopener" className="btn-tikkio billet-cta-btn">
-            Køb billetter <span className="arrow">→</span>
+          <a href="#klar-2027" className="btn-tikkio billet-cta-btn">
+            Vi gør klar til 2027 <span className="arrow">→</span>
           </a>
-
-          <div className="tikkio-trust">
-            <span>✓ MobilePay</span>
-            <span>✓ Betalingskort</span>
-            <span>✓ Billet på email</span>
-          </div>
         </div>
       </div>
     </section>

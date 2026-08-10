@@ -2,9 +2,16 @@
    ØLSTYKKE BY & MOTORFESTIVAL — content data
    ============================================================ */
 window.OBM_DATA = {
+  // Sæt til en sti/URL for at vise et hero-billede, fx "images/hero.jpg"
+  heroImage: null,
+
+  // Foto-galleri — læg filer i /images og tilføj dem her, fx:
+  // { src: "images/01.jpg", alt: "Lastbiler på pladsen ved solnedgang" }
+  gallery: [],
+
   whatGrid: [
     { num: "01", title: "Heavy Showtrucks", sub: "Chrome, lyssætning og lyd der vibrerer i brystkassen." },
-    { num: "02", title: "Lastbiler", sub: "Over 150 tilmeldte — Scania, Volvo, MAN, DAF og specialbygger." },
+    { num: "02", title: "Lastbiler", sub: "320 lastbiler var med — Scania, Volvo, MAN, DAF og specialbygger." },
     { num: "03", title: "Lowriders & Custom", sub: "Hopping hydraulics, candy paint og amerikanere på dansk asfalt." },
     { num: "04", title: "Motorcykler", sub: "Cruiser, sport, custom og veteran på to hjul." },
     { num: "05", title: "Veteran & Special", sub: "Klassikere, ombyggede tractorer og specialbyg du aldrig har set før." },
@@ -82,7 +89,7 @@ window.OBM_DATA = {
       day: "LØRDAG",
       rows: [
         { time: "09:00", title: "Portene åbner", sub: "Lørdag = hoved­dagen. Ingen forsinkelser.", tag: "ÅBEN" },
-        { time: "10:00", title: "Lastbil­udstilling", sub: "150+ tilmeldte biler — fra Scania til specialbyg.", tag: "HOT" },
+        { time: "10:00", title: "Lastbil­udstilling", sub: "320 lastbiler — fra Scania til specialbyg.", tag: "HOT" },
         { time: "11:30", title: "Trucktour gennem byen", sub: "Konvojen drøner gennem Ølstykke. Sig hej fra fortovet.", tag: "RUTE" },
         { time: "13:00", title: "Lowrider Show", sub: "Hilde's Custom Garage tager scenen — hydraulics på fuldt blus.", tag: "HOT" },
         { time: "14:30", title: "Motorcykel-parade", sub: "To hjul, fuld gas. Motorcyklerne tager turen rundt.", tag: "" },
@@ -106,25 +113,6 @@ window.OBM_DATA = {
     },
   },
 
-  voteOptions: [
-    { id: "v1", name: "Cadillac De Ville Lowrider '70", owner: "Hilde's Custom Garage", pct: 28, img: "Cadillac De Ville · 1970" },
-    { id: "v2", name: "Simpsons Scania", owner: "Morten Rasmussen", pct: 24, img: "Simpsons Scania · Showtruck" },
-    { id: "v3", name: "E-Trasborg Showtruck", owner: "E-Trasborg", pct: 14, img: "E-Trasborg · Heavy show" },
-    { id: "v4", name: "Vejby Cementstøberi", owner: "Vejby Cement­støberi", pct: 11, img: "Vejby · Scania showtruck" },
-    { id: "v5", name: "Casper G. Scania", owner: "Casper G. Christensen", pct: 9, img: "Casper G. · Custom Scania" },
-    { id: "v6", name: "Poul H. Hansen Flåde", owner: "Poul H. Hansen", pct: 7, img: "9 biler · Vognmand" },
-    { id: "v7", name: "Scarlet Autohjælp", owner: "Scarlet Autohjælp", pct: 4, img: "Wrecker · Scarlet" },
-    { id: "v8", name: "Sander's Tuk Tuk", owner: "Sander fra Sorø", pct: 3, img: "Tuk Tuk · Sorø" },
-  ],
-
-  vehicleTypes: [
-    "Heavy Showtruck",
-    "Lastbil / standard",
-    "Lowrider / Custom",
-    "Amerikanerbil",
-    "Motorcykel",
-    "Veteran­køretøj",
-    "Special­køretøj",
-    "Andet",
-  ],
+  // Vinderen af "Danmarks Fedeste Bil 2026" afgøres af en dommer —
+  // resultatet er ikke klar endnu og tilføjes her, når det er.
 };

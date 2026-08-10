@@ -5,55 +5,21 @@ const { useState, useEffect, useMemo } = React;
 const D = window.OBM_DATA;
 const Billet = window.Billet;
 
-// Supabase REST — henter live data til program og lineup
-const SUPABASE_URL  = "https://zxbmaadxsjeyksbqdwyx.supabase.co";
-const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp4Ym1hYWR4c2pleWtzYnFkd3l4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk3MDk3NDcsImV4cCI6MjA5NTI4NTc0N30.r6JdDygRKtHi0J46O9uicQ-oN8mxxBFbQt4LyEAdkIg";
-
 function timeSort(t) { const h = parseInt(t || "0"); return h < 6 ? h + 24 : h; }
 
+// Billeder er lokale filer i /images — funktionen findes stadig hvis en
+// Supabase Storage-URL nogensinde bruges igen, men rører ikke lokale stier.
 function imgUrl(url, width = 800, quality = 75) {
   if (!url || !url.includes("/storage/v1/object/public/")) return url;
   return url.replace("/storage/v1/object/public/", "/storage/v1/render/image/public/")
     + `?width=${width}&quality=${quality}`;
 }
 
-async function sbPost(table, body) {
-  try {
-    await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
-      method: "POST",
-      headers: {
-        apikey: SUPABASE_ANON,
-        Authorization: `Bearer ${SUPABASE_ANON}`,
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal",
-      },
-      body: JSON.stringify(body),
-    });
-  } catch {}
-}
-
-async function sbFetch(table, params = "") {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
-      headers: {
-        apikey: SUPABASE_ANON,
-        Authorization: `Bearer ${SUPABASE_ANON}`,
-        "Cache-Control": "no-cache",
-      },
-      cache: "no-store",
-    });
-    if (!res.ok) return null;
-    return res.json();
-  } catch { return null; }
-}
-
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "palette": ["#e63946", "#d4a942"],
   "displayFont": "Anton",
   "hazardOn": true,
-  "heroStyle": "split",
-  "showCountdown": true,
-  "showSticker": true
+  "heroStyle": "split"
 }/*EDITMODE-END*/;
 
 const FONT_STACKS = {
@@ -94,10 +60,9 @@ function applyTweaks(t) {
 function Topbar() {
   const [open, setOpen] = useState(false);
   const links = [
-    { href: "#billet", label: "Billetter" },
+    { href: "#galleri", label: "Billeder" },
     { href: "#program", label: "Program" },
     { href: "#lineup", label: "Lineup" },
-    { href: "#afstemning", label: "Afstemning" },
     { href: "#info", label: "Praktisk" },
   ];
   const close = () => setOpen(false);
@@ -113,7 +78,7 @@ function Topbar() {
         </a>
         <nav className="nav">
           {links.map(l => <a key={l.href} href={l.href}>{l.label}</a>)}
-          <a className="nav-cta" href="https://tikkio.com/events/64286" target="_blank" rel="noopener">Køb billet — 30 kr <span>→</span></a>
+          <a className="nav-cta" href="#klar-2027">Vi ses i 2027 <span>→</span></a>
         </nav>
         <button
           className={"hamburger" + (open ? " open" : "")}
@@ -128,22 +93,12 @@ function Topbar() {
           {links.map(l => (
             <a key={l.href} href={l.href} onClick={close}>{l.label}</a>
           ))}
-          <a className="mobile-cta" href="https://tikkio.com/events/64286" target="_blank" rel="noopener" onClick={close}>
-            Køb billet — 30 kr →
+          <a className="mobile-cta" href="#klar-2027" onClick={close}>
+            Vi ses i 2027 →
           </a>
         </nav>
       )}
     </header>
-  );
-}
-
-/* ---------- Parking price bubble (fixed, altid synlig) ---------- */
-function ParkingBadge() {
-  return (
-    <a href="#info" className="parking-bubble" aria-label="Parkering koster 25 kr — se praktisk info">
-      <span className="pb-top">Parkering</span>
-      <span className="pb-price">25 kr</span>
-    </a>
   );
 }
 
@@ -156,34 +111,11 @@ function ImgPH({ label, icon }) {
   );
 }
 
-/* ---------- Countdown ---------- */
-function useCountdown(target) {
-  const [now, setNow] = useState(Date.now());
-  useEffect(() => {
-    const i = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(i);
-  }, []);
-  const t = Math.max(0, target - now);
-  const d = Math.floor(t / 86400000);
-  const h = Math.floor((t / 3600000) % 24);
-  const m = Math.floor((t / 60000) % 60);
-  const s = Math.floor((t / 1000) % 60);
-  return { d, h, m, s };
-}
-
-/* ---------- Hero ---------- */
-function Hero({ showCountdown = true }) {
-  const c = useCountdown(new Date(2026, 7, 7, 16, 0, 0).getTime());
-  const [heroImg, setHeroImg] = useState(null);
-
-  useEffect(() => {
-    sbFetch("site_images", "select=url&section=eq.hero&limit=1")
-      .then(d => { if (d?.[0]?.url) setHeroImg(d[0].url); })
-      .catch(() => {});
-  }, []);
-
-  const heroStyle = heroImg ? {
-    backgroundImage: `linear-gradient(rgba(11,10,9,0.55), rgba(11,10,9,0.55)), url(${imgUrl(heroImg, 1600, 75)})`,
+/* ---------- Hero (recap) ---------- */
+function Hero({ heroImage } = {}) {
+  const img = heroImage || D.heroImage;
+  const heroStyle = img ? {
+    backgroundImage: `linear-gradient(rgba(11,10,9,0.55), rgba(11,10,9,0.55)), url(${imgUrl(img, 1600, 75)})`,
     backgroundSize: "cover",
     backgroundPosition: "center",
   } : {};
@@ -197,50 +129,39 @@ function Hero({ showCountdown = true }) {
             <span className="label">[ ØBM · 4. udgave · Stadionvej, Ølstykke ]</span>
           </div>
           <h1 className="hero-title">
-            <span className="row">Ølstykke</span>
-            <span className="row outline">By &amp;</span>
-            <span className="row"><span className="accent">Motor</span>festival</span>
+            <span className="row">Tak for</span>
+            <span className="row outline">ØBM</span>
+            <span className="row"><span className="accent">2026</span></span>
           </h1>
           <p className="hero-tag">
-            Det bliver <span className="strike">for stort</span> for vildt.
+            Det blev <span className="strike">for stort</span> for vildt.
           </p>
           <div className="hero-meta">
             <div>
-              <div>Datoer</div>
-              <strong>07 — 09 AUG 2026</strong>
+              <div>Gæster</div>
+              <strong>12.000</strong>
             </div>
             <div>
-              <div>Sted</div>
-              <strong>Stadionvej, 3650 Ølstykke</strong>
+              <div>Lastbiler</div>
+              <strong>320</strong>
             </div>
             <div>
-              <div>Varighed</div>
-              <strong>Fre · Lør · Søn</strong>
+              <div>Udstillere</div>
+              <strong>20</strong>
             </div>
             <div>
-              <div>Entré</div>
-              <strong>30 kr · alle 3 dage</strong>
+              <div>Dage</div>
+              <strong>07 — 09 AUG</strong>
             </div>
           </div>
           <div className="hero-cta-row">
-            <a href="https://tikkio.com/events/64286" target="_blank" rel="noopener" className="btn btn-primary btn-xl">
-              Køb billet — 30 kr <span className="arrow">→</span>
+            <a href="#galleri" className="btn btn-primary btn-xl">
+              Se billederne <span className="arrow">→</span>
             </a>
             <a href="#program" className="btn btn-ghost">
               Se programmet <span className="arrow">→</span>
             </a>
           </div>
-          {showCountdown && (
-            <div className="counter" style={{ marginTop: 20 }}>
-              <span className="counter-label">[ Nedtælling til portene åbner ]</span>
-              <div className="counter-vals">
-                <div className="cell"><span className="num">{String(c.d).padStart(2, "0")}</span><span className="unit">dage</span></div>
-                <div className="cell"><span className="num">{String(c.h).padStart(2, "0")}</span><span className="unit">timer</span></div>
-                <div className="cell"><span className="num">{String(c.m).padStart(2, "0")}</span><span className="unit">min</span></div>
-                <div className="cell"><span className="num">{String(c.s).padStart(2, "0")}</span><span className="unit">sek</span></div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </section>
@@ -252,7 +173,7 @@ function Marquee() {
   const items = [
     "Heavy Showtrucks", "Lowriders", "Custom Cars", "Lastbiler",
     "Motorcykler", "Veteran &amp; Special", "Kræmmer­marked", "Tivoli",
-    "Live Musik", "Mad &amp; Øl", "Diesel i blodet", "Det bliver for vildt",
+    "Live Musik", "Mad &amp; Øl", "Diesel i blodet", "Det blev for vildt",
   ];
   const list = [...items, ...items];
   return (
@@ -272,11 +193,11 @@ function Marquee() {
 /* ---------- Reach stats strip ---------- */
 function ReachStrip() {
   const stats = [
-    { num: "150+", label: "tilmeldte biler" },
-    { num: "316K", label: "visninger på SoMe" },
-    { num: "16.7K", label: "interaktioner" },
-    { num: "616", label: "følgere & vokser" },
+    { num: "12.000", label: "gæster" },
+    { num: "320", label: "lastbiler" },
+    { num: "20", label: "udstillere" },
     { num: "3", label: "dage festival" },
+    { num: "4.", label: "udgave af ØBM" },
   ];
   return (
     <div className="section section-tight" style={{ paddingTop: 56, paddingBottom: 56 }}>
@@ -294,22 +215,43 @@ function ReachStrip() {
   );
 }
 
+/* ---------- Foto-galleri ---------- */
+function Gallery() {
+  const photos = D.gallery || [];
+  if (photos.length === 0) return null;
+
+  return (
+    <section className="section" id="galleri">
+      <div className="container">
+        <div className="section-head">
+          <div className="lhs">
+            <span className="label label-bracket">01 / Galleri</span>
+            <h2>Sådan<br />så det <span className="accent">ud</span></h2>
+          </div>
+          <span className="num">[ {photos.length} billeder · ØBM 2026 ]</span>
+        </div>
+        <div className="gallery-grid">
+          {photos.map((p, i) => (
+            <div className="gallery-cell" key={i}>
+              <img src={p.src} alt={p.alt || "ØBM 2026"} loading="lazy" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------- What's happening ---------- */
 function WhatGrid() {
-  const [items, setItems] = useState(D.whatGrid);
-
-  useEffect(() => {
-    sbFetch("what_items", "select=*&order=sort_order").then(data => {
-      if (data && data.length > 0) setItems(data);
-    });
-  }, []);
+  const items = D.whatGrid;
 
   return (
     <section className="section" id="hvad">
       <div className="container">
         <div className="section-head">
           <div className="lhs">
-            <span className="label label-bracket">01 / Hvad sker der</span>
+            <span className="label label-bracket">02 / Hvad der skete</span>
             <h2>Tre dage<br />med <span className="accent">diesel</span> i blodet</h2>
           </div>
           <span className="num">[ {String(items.length).padStart(2,"0")} spor · ét sted ]</span>
@@ -333,33 +275,17 @@ function WhatGrid() {
 
 /* ---------- Lineup ---------- */
 function Lineup() {
-  const [items, setItems] = useState(D.lineup);
-
-  useEffect(() => {
-    sbFetch("lineup_items", "select=*&order=sort_order").then(data => {
-      if (data && data.length > 0) {
-        setItems(data.map(l => ({
-          name:     l.name,
-          meta:     l.meta,
-          tag:      l.tag,
-          blurb:    l.blurb,
-          imgLabel: l.img_label,
-          icon:     l.icon,
-          imageUrl: l.image_url,
-        })));
-      }
-    });
-  }, []);
+  const items = D.lineup;
 
   return (
     <section className="section" id="lineup">
       <div className="container">
         <div className="section-head">
           <div className="lhs">
-            <span className="label label-bracket">02 / Bekræftet lineup</span>
-            <h2>Folk<br />der <span className="accent">møder op</span></h2>
+            <span className="label label-bracket">03 / Dette var med</span>
+            <h2>Folk<br />der <span className="accent">mødte op</span></h2>
           </div>
-          <span className="num">[ {items.length} navne · flere på vej ]</span>
+          <span className="num">[ {items.length} navne · tak for i år ]</span>
         </div>
         <div className="lineup">
           {items.map(l => (
@@ -386,31 +312,17 @@ function Lineup() {
 
 /* ---------- Program (3-day) ---------- */
 function Program() {
-  const days = Object.keys(D.program);
+  const program = D.program;
+  const days = Object.keys(program);
   const [active, setActive] = useState("Lørdag");
-  const [liveProgram, setLiveProgram] = useState(null);
 
-  useEffect(() => {
-    sbFetch("program_items", "select=*").then(data => {
-      if (!data || data.length === 0) return;
-      const grouped = {};
-      data.forEach(r => {
-        if (!grouped[r.day]) grouped[r.day] = { day: r.day.toUpperCase(), date: D.program[r.day]?.date || "", rows: [] };
-        grouped[r.day].rows.push({ time: r.time_str, title: r.title, sub: r.sub, tag: r.tag });
-      });
-      Object.values(grouped).forEach(g => g.rows.sort((a, b) => timeSort(a.time) - timeSort(b.time)));
-      setLiveProgram(grouped);
-    });
-  }, []);
-
-  const program = liveProgram || D.program;
   const data = program[active] || program[Object.keys(program)[0]];
   return (
     <section className="section" id="program" style={{ background: "var(--bg-2)", borderTop: "1px solid var(--line)", borderBottom: "1px solid var(--line)" }}>
       <div className="container">
         <div className="section-head">
           <div className="lhs">
-            <span className="label label-bracket">03 / Program</span>
+            <span className="label label-bracket">04 / Sådan gik det</span>
             <h2>Tre dage,<br />ét <span className="accent">program</span></h2>
           </div>
           <span className="num">[ 07 — 09 AUG 2026 ]</span>
@@ -451,111 +363,19 @@ function Program() {
   );
 }
 
-/* ---------- Voting ---------- */
-function Voting() {
-  const [options, setOptions] = useState(D.voteOptions);
-  const [counts,  setCounts]  = useState({});
-  const [voted,   setVoted]   = useState(() => {
-    try { return localStorage.getItem("obm-voted") || null; } catch { return null; }
-  });
-
-  const total = useMemo(() => Math.max(Object.values(counts).reduce((a, b) => a + b, 0), 1), [counts]);
-
-  const sortedOptions = useMemo(
-    () => [...options].sort((a, b) => (counts[b.id] || 0) - (counts[a.id] || 0)),
-    [options, counts]
-  );
-
-  useEffect(() => {
-    sbFetch("vote_options", "select=*&order=sort_order").then(data => {
-      if (data && data.length > 0) setOptions(data);
-    });
-    sbFetch("votes", "select=option_id").then(data => {
-      if (!data) return;
-      const c = {};
-      data.forEach(v => { c[v.option_id] = (c[v.option_id] || 0) + 1; });
-      setCounts(c);
-    });
-  }, []);
-
-  const cast = async (id) => {
-    if (voted) return;
-    setCounts(c => ({ ...c, [id]: (c[id] || 0) + 1 }));
-    setVoted(id);
-    try { localStorage.setItem("obm-voted", id); } catch {}
-    await sbPost("votes", { option_id: id });
-  };
-
+/* ---------- Næste år (teaser) ---------- */
+function NextYear() {
   return (
-    <section className="section vote-bg" id="afstemning">
-      <div className="container">
-        <div className="section-head">
-          <div className="lhs">
-            <span className="label label-bracket">04 / Truckspotters' afstemning</span>
-            <h2>Hvilken er<br /><span className="accent">ØBM's fedeste</span> bil?</h2>
-          </div>
-          <span className="num">[ Vi finder ØBM's fedeste bil lørdag aften ]</span>
-        </div>
-        <div className="vote-grid">
-          {sortedOptions.map(o => {
-            const pct = Math.round(((counts[o.id] || 0) / total) * 100);
-            return (
-              <button
-                key={o.id}
-                className={"vote-card" + (voted === o.id ? " voted" : "")}
-                onClick={() => cast(o.id)}
-              >
-                <div className="vote-stamp">Stemt!</div>
-                <div className="vote-img">
-                  {o.image_url
-                    ? <img src={imgUrl(o.image_url, 400)} alt={o.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                    : <ImgPH label={o.img || o.name} />
-                  }
-                </div>
-                <div className="vote-body">
-                  <div className="vote-name">{o.name}</div>
-                  <div className="vote-owner">{o.owner}</div>
-                  <div className="vote-bar"><div style={{ width: pct + "%" }} /></div>
-                  <div className="vote-pct">
-                    <span>Stemmer</span>
-                    <span className="pct-num">{pct}%</span>
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-        <div style={{ marginTop: 24, fontFamily: "var(--ff-mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--cream-dim)" }}>
-          {voted ? "[ Tak — din stemme er talt. ]" : "[ Klik paa din favorit. ]"}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Lastbil CTA (sekundær) ---------- */
-function TruckCTA() {
-  return (
-    <section className="section section-tight" id="tilmelding">
+    <section className="section section-tight" id="klar-2027">
       <div className="container">
         <div className="truck-cta">
           <div className="tc-lhs">
-            <div className="label label-bracket" style={{ marginBottom: 10 }}>Har du selv en maskine?</div>
-            <h4>Tilmeld din lastbil, lowrider eller custom</h4>
-            <p>Vi vil gerne have din bil med på pladsen. Tilmelding senest <strong style={{ color: "var(--cream)" }}>24. juli 2026</strong> — send os en besked på Messenger.</p>
+            <div className="label label-bracket" style={{ marginBottom: 10 }}>Allerede i gang</div>
+            <h4>Vi gør nu klar til 2027 🚛</h4>
+            <p>ØBM 2026 er lige overstået, og vi er allerede i gang med at planlægge næste udgave. Følg med på Facebook, så du er den første der hører om datoer og nyheder.</p>
           </div>
-          <div className="tc-fees">
-            <div>
-              Lastbil­udstilling
-              <strong>400 kr</strong>
-            </div>
-            <div>
-              Fællesspisning
-              <strong>400 kr</strong>
-            </div>
-          </div>
-          <a className="btn btn-ghost" href="#info">
-            Kontakt os <span className="arrow">→</span>
+          <a className="btn btn-ghost" href="https://www.facebook.com/profile.php?id=61589298855212" target="_blank" rel="noopener">
+            Følg os på Facebook <span className="arrow">→</span>
           </a>
         </div>
       </div>
@@ -565,23 +385,10 @@ function TruckCTA() {
 
 /* ---------- Practical ---------- */
 function Practical() {
-  const [s, setS] = useState({});
-
-  useEffect(() => {
-    sbFetch("site_settings", "select=key,value").then(data => {
-      if (data) {
-        const map = {};
-        data.forEach(r => { map[r.key] = r.value; });
-        setS(map);
-      }
-    });
-  }, []);
-
-  const phone  = s.phone        || "33 60 52 74";
-  const fbUrl  = s.facebook_url || "https://www.facebook.com/profile.php?id=61589298855212";
-  const addr1  = s.address1     || "Stadionvej";
-  const addr2  = s.address2     || "3650 Ølstykke";
-  const price  = s.ticket_price || "30";
+  const phone = "33 60 52 74";
+  const fbUrl = "https://www.facebook.com/profile.php?id=61589298855212";
+  const addr1 = "Stadionvej";
+  const addr2 = "3650 Ølstykke";
 
   return (
     <section className="section" id="info">
@@ -597,7 +404,7 @@ function Practical() {
           <div className="p-cell">
             <div className="label label-bracket">Adresse</div>
             <h4>{addr1}</h4>
-            <p>{addr2}<br />Nordsjælland, Danmark<br /><br />Parkering på pladsen — 25 kr — følg skiltning ind fra Frederikssundsvej.</p>
+            <p>{addr2}<br />Nordsjælland, Danmark<br /><br />Sådan så pladsen ud i 2026 — vi bygger den op igen til 2027.</p>
           </div>
           <div className="p-cell">
             <div className="label label-bracket">Kontakt</div>
@@ -607,13 +414,13 @@ function Practical() {
           </div>
           <div className="p-cell">
             <div className="label label-bracket">Billetter</div>
-            <h4>{price} kr · alle 3 dage</h4>
-            <p>Én billet giver adgang til alle tre dage.<br /><br />Køb online via Tikkio eller i indgangen — vi anbefaler online for hurtig adgang.</p>
+            <h4>Billetsalget er lukket</h4>
+            <p>Festivalen er afholdt for i år. Billetter til 2027 åbner i god tid — følg med på Facebook.</p>
           </div>
           <div className="p-cell">
             <div className="label label-bracket">For familien</div>
             <h4>Hele dagen, hele weekenden</h4>
-            <p>Kræmmermarked, tivoli, madboder og masser af aktiviteter for hele familien.</p>
+            <p>Kræmmermarked, tivoli, madboder og masser af aktiviteter for hele familien — sådan bliver det igen i 2027.</p>
           </div>
         </div>
       </div>
@@ -636,11 +443,10 @@ function Footer() {
           </div>
           <div className="foot-col">
             <h5>Festival</h5>
-            <a href="https://tikkio.com/events/64286" target="_blank" rel="noopener">Køb billet</a>
+            <a href="#galleri">Billeder</a>
             <a href="#program">Program</a>
             <a href="#lineup">Lineup</a>
-            <a href="#afstemning">Afstemning</a>
-            <a href="#tilmelding">Tilmeld lastbil</a>
+            <a href="#klar-2027">2027</a>
           </div>
           <div className="foot-col">
             <h5>Praktisk</h5>
@@ -651,8 +457,8 @@ function Footer() {
           </div>
           <div className="foot-col">
             <h5>Følg med</h5>
-            <a href="#">Facebook</a>
-            <a href="#">Messenger</a>
+            <a href="https://www.facebook.com/profile.php?id=61589298855212" target="_blank" rel="noopener">Facebook</a>
+            <a href="https://www.facebook.com/profile.php?id=61589298855212" target="_blank" rel="noopener">Messenger</a>
           </div>
         </div>
 
@@ -662,8 +468,7 @@ function Footer() {
 
         <div className="foot-bottom">
           <span>© 2026 Ølstykke By &amp; Motorfestival</span>
-          <span>[ Det bliver for vildt — vi ses 07 — 09 AUG ]</span>
-          <a href="admin.html" style={{ color: "var(--cream-dim)", fontSize: 12, opacity: 0.4, textDecoration: "none", letterSpacing: "0.08em" }}>Admin</a>
+          <span>[ Tak for 2026 — vi gør klar til 2027 ]</span>
         </div>
       </div>
     </footer>
@@ -671,10 +476,8 @@ function Footer() {
 }
 
 /* ---------- Hero (tweak-aware wrapper) ---------- */
-function HeroWrapped({ t }) {
-  return (
-    <Hero showCountdown={t.showCountdown} showSticker={t.showSticker} />
-  );
+function HeroWrapped() {
+  return <Hero />;
 }
 
 /* ---------- App ---------- */
@@ -686,17 +489,16 @@ function App() {
   return (
     <>
       <Topbar />
-      <ParkingBadge />
-      <HeroWrapped t={t} />
+      <HeroWrapped />
       <Marquee />
       <div className="hazard hazard-red"></div>
-      <Billet />
+      <Gallery />
       <WhatGrid />
       <Lineup />
       <Program />
-      <Voting />
-      <TruckCTA />
+      <NextYear />
       <div className="hazard"></div>
+      <Billet />
       <Practical />
       <Footer />
 
@@ -722,18 +524,6 @@ function App() {
           value={t.displayFont}
           options={["Anton", "Bebas Neue", "Archivo Black", "Big Shoulders"]}
           onChange={(v) => setTweak('displayFont', v)}
-        />
-
-        <TweakSection label="Hero" />
-        <TweakToggle
-          label="Vis sticker"
-          value={t.showSticker}
-          onChange={(v) => setTweak('showSticker', v)}
-        />
-        <TweakToggle
-          label="Vis nedtælling"
-          value={t.showCountdown}
-          onChange={(v) => setTweak('showCountdown', v)}
         />
 
         <TweakSection label="Stil" />
