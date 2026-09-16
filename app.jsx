@@ -13,6 +13,21 @@ function imgUrl(url, width = 800, quality = 75) {
     + `?width=${width}&quality=${quality}`;
 }
 
+/* ---------- Nedtælling til billetsalg 2027 ---------- */
+function useCountdown(target) {
+  const [now, setNow] = useState(Date.now());
+  useEffect(() => {
+    const i = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(i);
+  }, []);
+  const t = Math.max(0, target - now);
+  const d = Math.floor(t / 86400000);
+  const h = Math.floor((t / 3600000) % 24);
+  const m = Math.floor((t / 60000) % 60);
+  const s = Math.floor((t / 1000) % 60);
+  return { d, h, m, s };
+}
+
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "palette": ["#e63946", "#d4a942"],
   "displayFont": "Anton",
@@ -123,7 +138,7 @@ function Hero({ heroImage } = {}) {
         <div className="hero-left">
           <div className="hero-eyebrow">
             <span className="dot"></span>
-            <span className="label">[ ØBM · 4. udgave · Stadionvej, Ølstykke ]</span>
+            <span className="label">[ ØBM · 2. udgave · Stadionvej, Ølstykke ]</span>
           </div>
           <h1 className="hero-title">
             <span className="row">Tusind tak</span>
@@ -172,7 +187,7 @@ function ThanksStats() {
     { num: "320", label: "lastbiler" },
     { num: "20", label: "udstillere" },
     { num: "3", label: "dage i træk" },
-    { num: "4.", label: "udgave af ØBM" },
+    { num: "2.", label: "udgave af ØBM" },
   ];
   return (
     <div className="thanks-stats">
@@ -314,6 +329,7 @@ function Lineup() {
 
 /* ---------- Næste år (teaser) ---------- */
 function NextYear() {
+  const c = useCountdown(new Date(2026, 9, 1, 12, 0, 0).getTime());
   return (
     <section className="next-year" id="klar-2027">
       <div className="container next-year-inner">
@@ -321,8 +337,20 @@ function NextYear() {
         <h2 className="ny-headline">
           Vi går i gang med<br />planlægningen af <span className="ny-pop">ØBM 2027</span><br />allerede nu 🚛
         </h2>
+
+        <div className="ny-countdown">
+          <div className="ny-countdown-label">Billetsalget til 2027 åbner om</div>
+          <div className="ny-countdown-vals">
+            <div className="cell"><span className="num">{String(c.d).padStart(2, "0")}</span><span className="unit">dage</span></div>
+            <div className="cell"><span className="num">{String(c.h).padStart(2, "0")}</span><span className="unit">timer</span></div>
+            <div className="cell"><span className="num">{String(c.m).padStart(2, "0")}</span><span className="unit">min</span></div>
+            <div className="cell"><span className="num">{String(c.s).padStart(2, "0")}</span><span className="unit">sek</span></div>
+          </div>
+          <div className="ny-countdown-date">[ 1. oktober 2026 · kl. 12:00 ]</div>
+        </div>
+
         <p className="ny-sub">
-          ØBM 2026 er lige overstået, og vi er i fuld gang med at planlægge næste udgave. Følg med på Facebook, så du er den første der hører om datoer og nyheder.
+          ØBM 2026 er lige overstået, og vi er i fuld gang med at planlægge næste udgave. Billetsalget til 2027 slår dørene op 1. oktober kl. 12:00 — følg med på Facebook, så du er den første der hører om det.
         </p>
         <a className="btn ny-cta" href="https://www.facebook.com/profile.php?id=61589298855212" target="_blank" rel="noopener">
           Følg os på Facebook <span className="arrow">→</span>
