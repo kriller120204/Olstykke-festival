@@ -25,7 +25,7 @@ function useCountdown(target) {
   const h = Math.floor((t / 3600000) % 24);
   const m = Math.floor((t / 60000) % 60);
   const s = Math.floor((t / 1000) % 60);
-  return { d, h, m, s };
+  return { d, h, m, s, complete: t === 0 };
 }
 
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
@@ -140,18 +140,24 @@ function Hero({ heroImage } = {}) {
         <div className="hero-left">
           <div className="hero-eyebrow">
             <span className="dot"></span>
-            <span className="label">[ ØBM · 2. udgave · Stadionvej, Ølstykke ]</span>
+            <span className="label">[ ØBM · 1. udgave · Stadionvej, Ølstykke ]</span>
           </div>
 
           <div className="hero-countdown">
-            <div className="hero-countdown-label">🎟 Billetsalget til ØBM 2027 åbner om</div>
-            <div className="hero-countdown-vals">
-              <div className="cell"><span className="num">{String(c.d).padStart(2, "0")}</span><span className="unit">dage</span></div>
-              <div className="cell"><span className="num">{String(c.h).padStart(2, "0")}</span><span className="unit">timer</span></div>
-              <div className="cell"><span className="num">{String(c.m).padStart(2, "0")}</span><span className="unit">min</span></div>
-              <div className="cell"><span className="num">{String(c.s).padStart(2, "0")}</span><span className="unit">sek</span></div>
-            </div>
-            <div className="hero-countdown-date">[ 1. oktober 2026 · kl. 12:00 ]</div>
+            {c.complete ? (
+              <div className="hero-countdown-label">Følg med på Facebook for nyt om billetsalget til ØBM 2027.</div>
+            ) : (
+              <>
+                <div className="hero-countdown-label">🎟 Billetsalget til ØBM 2027 åbner om</div>
+                <div className="hero-countdown-vals">
+                  <div className="cell"><span className="num">{String(c.d).padStart(2, "0")}</span><span className="unit">dage</span></div>
+                  <div className="cell"><span className="num">{String(c.h).padStart(2, "0")}</span><span className="unit">timer</span></div>
+                  <div className="cell"><span className="num">{String(c.m).padStart(2, "0")}</span><span className="unit">min</span></div>
+                  <div className="cell"><span className="num">{String(c.s).padStart(2, "0")}</span><span className="unit">sek</span></div>
+                </div>
+                <div className="hero-countdown-date">[ 1. oktober 2026 · kl. 12:00 ]</div>
+              </>
+            )}
           </div>
 
           <h1 className="hero-title">
@@ -160,7 +166,7 @@ function Hero({ heroImage } = {}) {
             <span className="row">ØBM <span className="accent">2026</span></span>
           </h1>
           <p className="hero-tag">
-            Det blev <span className="strike">for stort</span> for vildt — tak fordi 12.000 af jer viste op og gjorde 2026 til den vildeste udgave af ØBM nogensinde.
+            Det blev <span className="strike">for stort</span> for vildt — tak fordi 12.000 af jer viste op og gjorde 2026 til den vildeste start på ØBM.
           </p>
           <div className="hero-meta">
             <div>
@@ -201,7 +207,7 @@ function ThanksStats() {
     { num: "320", label: "lastbiler" },
     { num: "20", label: "udstillere" },
     { num: "3", label: "dage i træk" },
-    { num: "2.", label: "udgave af ØBM" },
+    { num: "1.", label: "udgave af ØBM" },
   ];
   return (
     <div className="thanks-stats">
@@ -351,7 +357,7 @@ function NextYear() {
           Vi går i gang med<br />planlægningen af <span className="ny-pop">ØBM 2027</span><br />allerede nu 🚛
         </h2>
         <p className="ny-sub">
-          ØBM 2026 er lige overstået, og vi er i fuld gang med at planlægge næste udgave. Billetsalget til 2027 slår dørene op 1. oktober kl. 12:00 — følg med på Facebook, så du er den første der hører om det.
+          ØBM 2026 er lige overstået, og vi er i fuld gang med at planlægge næste udgave. Billetsalget til 2027 slår dørene op 1. oktober kl. 12:00 — følg med på Facebook, så du er den første, der hører om det.
         </p>
         <a className="btn ny-cta" href="https://www.facebook.com/profile.php?id=61589298855212" target="_blank" rel="noopener">
           Følg os på Facebook <span className="arrow">→</span>

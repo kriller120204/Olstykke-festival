@@ -15,10 +15,10 @@ window.OBM_DATA = {
 
   whatGrid: [
     { num: "01", title: "Heavy Showtrucks", sub: "Chrome, lyssætning og lyd der vibrerer i brystkassen." },
-    { num: "02", title: "Lastbiler", sub: "320 lastbiler var med — Scania, Volvo, MAN, DAF og specialbygger." },
+    { num: "02", title: "Lastbiler", sub: "320 lastbiler var med — Scania, Volvo, MAN, DAF og specialbyggede." },
     { num: "03", title: "Lowriders & Custom", sub: "Hopping hydraulics, candy paint og amerikanere på dansk asfalt." },
     { num: "04", title: "Motorcykler", sub: "Cruiser, sport, custom og veteran på to hjul." },
-    { num: "05", title: "Veteran & Special", sub: "Klassikere, ombyggede tractorer og specialbyg du aldrig har set før." },
+    { num: "05", title: "Veteran & Special", sub: "Klassikere, ombyggede traktorer og specialbyg du aldrig har set før." },
     { num: "06", title: "Musik & Scene", sub: "Live optræden lørdag aften — rock, country og dansktop." },
     { num: "07", title: "Mad & Øl", sub: "Pølse­vogn, grillmad, fadøl og fællesspisning fra Holstedt Pøllegris." },
     { num: "08", title: "Kræmmer & Tivoli", sub: "Markedsboder, karrusel og aktiviteter for hele familien." },
@@ -50,14 +50,6 @@ window.OBM_DATA = {
       icon: "MR",
     },
     {
-      name: "Poul H. Hansen",
-      meta: "Vognmandsforretning · 9 biler",
-      tag: "Flåde",
-      blurb: "Hele flåden trækker ind — ni køretøjer på række. Klassisk, polerede og klar til foto.",
-      imgLabel: "Poul H. Hansen · 9 biler",
-      icon: "PHH",
-    },
-    {
       name: "Casper G. Christensen",
       meta: "Scania · Heavy",
       tag: "Showtruck",
@@ -69,7 +61,7 @@ window.OBM_DATA = {
       name: "Vejby Cementstøberi",
       meta: "Scania Showtruck",
       tag: "Showtruck",
-      blurb: "En workhorse forklædt som showbil. Funktion og form i ét. Beton­bransjens flotteste.",
+      blurb: "En workhorse forklædt som showbil. Funktion og form i ét. Beton­branchens flotteste.",
       imgLabel: "Vejby Cementstøberi · Scania",
       icon: "VC",
     },

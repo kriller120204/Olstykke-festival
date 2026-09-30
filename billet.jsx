@@ -23,7 +23,7 @@ function Billet() {
           <div className="billet-pricing">
             <div className="row">
               <div>
-                <div className="ltype">Festivalsbillet</div>
+                <div className="ltype">Festivalbillet</div>
                 <div className="ldesc">Pr. dag</div>
               </div>
               <div className="lprice">30<span className="kr">kr</span></div>
@@ -31,14 +31,14 @@ function Billet() {
             <div className="row">
               <div>
                 <div className="ltype">Fællesspisning · voksen</div>
-                <div className="ldesc">Fredag aften · begrænset pladser</div>
+                <div className="ldesc">Fredag aften · begrænsede pladser</div>
               </div>
               <div className="lprice">189<span className="kr">kr</span></div>
             </div>
             <div className="row">
               <div>
                 <div className="ltype">Fællesspisning · barn</div>
-                <div className="ldesc">Fredag aften · begrænset pladser</div>
+                <div className="ldesc">Fredag aften · begrænsede pladser</div>
               </div>
               <div className="lprice">99<span className="kr">kr</span></div>
             </div>
