@@ -252,14 +252,14 @@ function About() {
 
           <aside className="about-card">
             <div className="label label-bracket">Bag ØBM</div>
-            <h3>Lokale folk.<br /><span className="accent">Lokal fest.</span></h3>
+            <h3>Født i Ølstykke.<br /><span className="accent">Åben for alle.</span></h3>
             <p>
-              ØBM er skabt af Ølstykke Auto — folk fra byen, der brænder for motorer og for Ølstykke. Festivalen bliver til med lokale kræfter og en flok frivillige, der bruger deres fritid på at bygge pladsen op, så byen kan samles.
+              ØBM er skabt af Ølstykke Auto, der brænder for motorer og for Ølstykke. Festivalen har rødder i byen, men gæster og udstillere kommer fra hele landet — og fra udlandet. Bag det hele står en flok frivillige, der bruger deres fritid på at bygge pladsen op, så vi kan samles.
             </p>
             <ul className="about-points">
               <li><span>01</span>Arrangeret af Ølstykke Auto</li>
               <li><span>02</span>Drevet af frivillige</li>
-              <li><span>03</span>Lavet i Ølstykke — for alle</li>
+              <li><span>03</span>Gæster fra hele landet og udlandet</li>
             </ul>
             <p className="about-foot">
               2026 var første udgave med 12.000 gæster. I 2027 gør vi det igen — med et større kræmmermarked og flere madvogne.
