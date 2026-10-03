@@ -15,6 +15,12 @@ window.OBM_DATA = {
     { src: "images/04-bar-nat.jpg", alt: "Baren om aftenen med lys og røg i baggrunden" },
     { src: "images/05-lastbiler-nat.jpg", alt: "Lastbilkonvojen om natten med pariserhjulet i baggrunden" },
     { src: "images/06-lastbiler-lys-aften.jpg", alt: "Hele pladsen fyldt med oplyste lastbiler og kraner i aftenmørket" },
+    { src: "images/10-hygge-i-teltet.jpg", alt: "Hygge i teltet med venner, mad og kolde drikke" },
+    { src: "images/07-lastbiler-paa-raekke-nat.jpg", alt: "Oplyste lastbiler på række om natten" },
+    { src: "images/12-neonskilte.jpg", alt: "Væg af amerikanske neonskilte, der lyser op i mørket" },
+    { src: "images/09-gaester-mellem-lastbiler.jpg", alt: "Gæster går mellem rækker af pyntede lastbiler i aftenlyset" },
+    { src: "images/08-pladsen-om-natten.jpg", alt: "Pladsen om natten med lys, kraner og lastbiler så langt øjet rækker" },
+    { src: "images/11-lastbilgade-nat.jpg", alt: "Gæster mellem to lange rækker af oplyste lastbiler om natten" },
   ],
 
   whatGrid: [
