@@ -169,9 +169,9 @@ function Hero({ heroImage } = {}) {
 /* ---------- Tak-for-i-år tal (stor) ---------- */
 function ThanksStats() {
   const stats = [
-    { num: "12.000", label: "gæster på pladsen" },
-    { num: "320", label: "lastbiler" },
-    { num: "20", label: "udstillere" },
+    { num: "+12.000", label: "gæster på pladsen" },
+    { num: "+320", label: "lastbiler" },
+    { num: "+20", label: "udstillere" },
     { num: "3", label: "dage i træk" },
     { num: "1.", label: "udgave af ØBM" },
   ];
