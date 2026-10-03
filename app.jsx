@@ -219,9 +219,11 @@ function Marquee() {
 
 /* ---------- Hvad er ØBM? ---------- */
 function About() {
-  const tags = [
-    "Byfest", "Festival", "Truckshow", "Motorshow",
-    "Kræmmermarked", "Foodfestival", "Tivoli", "Og meget mere",
+  const forAll = [
+    { title: "Kræmmermarked", sub: "Boder med tøj, ting og sager — gå på opdagelse og gør et fund." },
+    { title: "Tivoli & børn", sub: "Karrusel, tivoli og aktiviteter, så de mindste har en kæmpe dag." },
+    { title: "Mad & musik", sub: "Madvogne, fadøl, fællesspisning og live musik på scenen." },
+    { title: "Biler & trucks", sub: "Showtrucks, lastbiler, custom, veteran og motorcykler." },
   ];
   return (
     <section className="section" id="om">
@@ -237,24 +239,29 @@ function About() {
         <div className="about-grid">
           <div className="about-main">
             <p className="about-lead">
-              ØBM er byfest, festival, truckshow, motorshow, kræmmermarked, foodfestival og tivoli — samlet på én plads, i én weekend.
+              Far skal se på biler, sønnike skal i tivoli, og mor skal finde en ny kjole på kræmmermarkedet.
             </p>
             <p>
-              Vi vil skabe en weekend for venner og familie, hvor man kan mødes og opleve en anden verden. Hvor chrome, diesel og lysshow møder pølsevogn, karrusel og fadøl — og hvor både de mindste og de garvede vognmænd går hjem med et smil.
+              ØBM er byfest, festival, kræmmermarked, foodfestival, tivoli og motorshow — samlet på én plads, i én weekend. Vi vil skabe en weekend for venner og familie, hvor man kan mødes, hygge sig og opleve en anden verden.
             </p>
             <p>
-              Du behøver ikke vide noget om motorer for at få en fed dag. Kom for stemningen, maden, musikken og fællesskabet — det er en weekend for alle.
+              Du behøver ikke vide noget om motorer for at få en fed dag. Kom for stemningen, maden, musikken, boderne og fællesskabet — det er en weekend for alle.
             </p>
-            <ul className="about-tags">
-              {tags.map(t => <li key={t}>{t}</li>)}
-            </ul>
+            <div className="about-forall">
+              {forAll.map(f => (
+                <div key={f.title} className="about-forall-cell">
+                  <h4>{f.title}</h4>
+                  <p>{f.sub}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <aside className="about-card">
             <div className="label label-bracket">Bag ØBM</div>
             <h3>Født i Ølstykke.<br /><span className="accent">Åben for alle.</span></h3>
             <p>
-              ØBM er skabt af Ølstykke Auto, der brænder for motorer og for Ølstykke. Festivalen har rødder i byen, men gæster og udstillere kommer fra hele landet — og fra udlandet. Bag det hele står en flok frivillige, der bruger deres fritid på at bygge pladsen op, så vi kan samles.
+              ØBM er skabt af Ølstykke Auto, der brænder for Ølstykke og for at samle folk. Festivalen har rødder i byen, men gæster og udstillere kommer fra hele landet — og fra udlandet. Bag det hele står en flok frivillige, der bruger deres fritid på at bygge pladsen op, så vi kan samles.
             </p>
             <ul className="about-points">
               <li><span>01</span>Arrangeret af Ølstykke Auto</li>

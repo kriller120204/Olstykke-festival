@@ -507,25 +507,39 @@ img { display: block; max-width: 100%; }
   color: var(--cream);
   margin-bottom: 28px;
 }
-.about-tags {
-  list-style: none;
-  padding: 0;
-  margin: 28px 0 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.about-forall {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-top: 28px;
 }
-.about-tags li {
-  font-family: var(--ff-mono);
-  font-size: 11px;
-  letter-spacing: 0.14em;
+.about-forall-cell {
+  background: var(--bg);
+  padding: 20px 20px 18px;
+  border-top: 3px solid transparent;
+}
+.about-forall-cell:nth-child(1) { border-top-color: var(--accent); }
+.about-forall-cell:nth-child(2) { border-top-color: var(--gold); }
+.about-forall-cell:nth-child(3) { border-top-color: var(--gold); }
+.about-forall-cell:nth-child(4) { border-top-color: var(--accent); }
+.about-forall-cell h4 {
+  font-family: var(--ff-display);
+  font-size: 22px;
   text-transform: uppercase;
-  padding: 8px 12px;
-  border: 1px solid var(--line-2);
+  line-height: 1;
+  margin: 0 0 8px;
   color: var(--cream);
 }
-.about-tags li:nth-child(odd) { border-color: var(--accent); }
-.about-tags li:last-child { color: var(--gold); border-color: var(--gold); }
+.about-main .about-forall-cell p {
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .about-forall { grid-template-columns: 1fr; }
+}
 .about-card {
   background: var(--bg-2);
   border: 1px solid var(--line);
