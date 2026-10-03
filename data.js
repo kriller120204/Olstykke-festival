@@ -4,6 +4,9 @@
 window.OBM_DATA = {
   heroImage: "images/01-oversigt-solnedgang.jpg",
 
+  // Billetsalg for udstillere (lastbiler og biler) til ØBM 2027
+  exhibitorTicketUrl: "https://www.billetsalg.dk/Ticket/%C3%98lstykke%20By%20%26%20Motorfestival%202027%20for%20udstiller/11807",
+
   // Foto-galleri — vises som en stor billedstak der kører ned af siden
   gallery: [
     { src: "images/01-oversigt-solnedgang.jpg", alt: "Luftfoto over pladsen ved solnedgang — lastbiler og tusindvis af gæster" },

@@ -1,58 +1,45 @@
 /* ============================================================
-   ØLSTYKKE BY & MOTORFESTIVAL — Billetter (2026 afholdt, salg lukket)
+   ØLSTYKKE BY & MOTORFESTIVAL — Billetter (2027: udstillersalg åbent)
    ============================================================ */
 
 function Billet() {
+  const url = window.OBM_DATA.exhibitorTicketUrl;
   return (
     <section className="section billet-bg" id="billet">
       <div className="container">
         <div className="section-head">
           <div className="lhs">
-            <span className="label label-bracket">Billetsalg 2026 · lukket</span>
-            <h2>Sådan var<br />prisen i <span className="accent">2026</span></h2>
+            <span className="label label-bracket">Billetsalg 2027 · udstillere</span>
+            <h2>Vis din<br />bil <span className="accent">frem</span></h2>
           </div>
-          <span className="num">[ 07 — 09 AUG · Stadionvej, Ølstykke ]</span>
+          <span className="num">[ 13 — 15 AUG 2027 · Stadionvej, Ølstykke ]</span>
         </div>
 
         <div className="billet-centered">
-          <h3>Billetsalget<br />er lukket.</h3>
+          <h3>Salget for<br />udstillere er åbent.</h3>
           <p className="lead">
-            Festivalen er afholdt for i år — tak til alle der var med. Her er priserne, som en hilsen til dem der spørger — nye priser og billetter kommer, når vi åbner salget til 2027.
+            Har du en lastbil eller bil, du vil vise frem på ØBM 2027? Køb din udstillerbillet nu, og del din passion med gæster og andre entusiaster. Billetten kan printes eller vises på mobilen.
           </p>
 
           <div className="billet-pricing">
             <div className="row">
               <div>
-                <div className="ltype">Festivalbillet</div>
-                <div className="ldesc">Pr. dag</div>
-              </div>
-              <div className="lprice">30<span className="kr">kr</span></div>
-            </div>
-            <div className="row">
-              <div>
-                <div className="ltype">Fællesspisning · voksen</div>
-                <div className="ldesc">Fredag aften · begrænsede pladser</div>
-              </div>
-              <div className="lprice">189<span className="kr">kr</span></div>
-            </div>
-            <div className="row">
-              <div>
-                <div className="ltype">Fællesspisning · barn</div>
-                <div className="ldesc">Fredag aften · begrænsede pladser</div>
-              </div>
-              <div className="lprice">99<span className="kr">kr</span></div>
-            </div>
-            <div className="row">
-              <div>
                 <div className="ltype">Udstiller</div>
-                <div className="ldesc">Bil/lastbil på pladsen</div>
+                <div className="ldesc">Lastbil eller bil · + 25 kr i gebyr</div>
               </div>
-              <div className="lprice">400<span className="kr">kr</span></div>
+              <div className="lprice">550<span className="kr">kr</span></div>
+            </div>
+            <div className="row">
+              <div>
+                <div className="ltype">Gæster</div>
+                <div className="ldesc">Billetsalget åbner senere</div>
+              </div>
+              <div className="lprice free">Snart</div>
             </div>
           </div>
 
-          <a href="#klar-2027" className="btn-tikkio billet-cta-btn">
-            Vi gør klar til 2027 <span className="arrow">→</span>
+          <a href={url} className="btn-tikkio billet-cta-btn" target="_blank" rel="noopener">
+            Køb udstillerbillet <span className="arrow">→</span>
           </a>
         </div>
       </div>

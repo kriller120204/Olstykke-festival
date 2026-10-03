@@ -13,21 +13,6 @@ function imgUrl(url, width = 800, quality = 75) {
     + `?width=${width}&quality=${quality}`;
 }
 
-/* ---------- Nedtælling til billetsalg 2027 ---------- */
-function useCountdown(target) {
-  const [now, setNow] = useState(Date.now());
-  useEffect(() => {
-    const i = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(i);
-  }, []);
-  const t = Math.max(0, target - now);
-  const d = Math.floor(t / 86400000);
-  const h = Math.floor((t / 3600000) % 24);
-  const m = Math.floor((t / 60000) % 60);
-  const s = Math.floor((t / 1000) % 60);
-  return { d, h, m, s, complete: t === 0 };
-}
-
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
   "palette": ["#e63946", "#d4a942"],
   "displayFont": "Anton",
@@ -90,7 +75,7 @@ function Topbar() {
         </a>
         <nav className="nav">
           {links.map(l => <a key={l.href} href={l.href}>{l.label}</a>)}
-          <a className="nav-cta" href="#klar-2027">Vi ses i 2027 <span>→</span></a>
+          <a className="nav-cta" href="#billet">Udstillerbillet 2027 <span>→</span></a>
         </nav>
         <button
           className={"hamburger" + (open ? " open" : "")}
@@ -105,8 +90,8 @@ function Topbar() {
           {links.map(l => (
             <a key={l.href} href={l.href} onClick={close}>{l.label}</a>
           ))}
-          <a className="mobile-cta" href="#klar-2027" onClick={close}>
-            Vi ses i 2027 →
+          <a className="mobile-cta" href="#billet" onClick={close}>
+            Udstillerbillet 2027 →
           </a>
         </nav>
       )}
@@ -132,8 +117,6 @@ function Hero({ heroImage } = {}) {
     backgroundPosition: "center",
   } : {};
 
-  const c = useCountdown(new Date(2026, 9, 1, 12, 0, 0).getTime());
-
   return (
     <section className="hero hero-photo" id="top" style={heroStyle}>
       <div className="hero-grid">
@@ -144,20 +127,11 @@ function Hero({ heroImage } = {}) {
           </div>
 
           <div className="hero-countdown">
-            {c.complete ? (
-              <div className="hero-countdown-label">Følg med på Facebook for nyt om billetsalget til ØBM 2027.</div>
-            ) : (
-              <>
-                <div className="hero-countdown-label">🎟 Billetsalget til ØBM 2027 åbner om</div>
-                <div className="hero-countdown-vals">
-                  <div className="cell"><span className="num">{String(c.d).padStart(2, "0")}</span><span className="unit">dage</span></div>
-                  <div className="cell"><span className="num">{String(c.h).padStart(2, "0")}</span><span className="unit">timer</span></div>
-                  <div className="cell"><span className="num">{String(c.m).padStart(2, "0")}</span><span className="unit">min</span></div>
-                  <div className="cell"><span className="num">{String(c.s).padStart(2, "0")}</span><span className="unit">sek</span></div>
-                </div>
-                <div className="hero-countdown-date">[ 1. oktober 2026 · kl. 12:00 ]</div>
-              </>
-            )}
+            <div className="hero-countdown-label">🎟 Billetsalget for udstillere til ØBM 2027 er åbent</div>
+            <a href={D.exhibitorTicketUrl} className="btn-tikkio" target="_blank" rel="noopener">
+              Køb udstillerbillet <span className="arrow">→</span>
+            </a>
+            <div className="hero-countdown-date">[ Lastbiler &amp; biler · 13. — 15. august 2027 ]</div>
           </div>
 
           <h1 className="hero-title">
@@ -357,7 +331,7 @@ function NextYear() {
           Vi går i gang med<br />planlægningen af <span className="ny-pop">ØBM 2027</span><br />allerede nu 🚛
         </h2>
         <p className="ny-sub">
-          ØBM 2026 er lige overstået, og vi er i fuld gang med at planlægge næste udgave. Billetsalget til 2027 slår dørene op 1. oktober kl. 12:00 — følg med på Facebook, så du er den første, der hører om det.
+          ØBM 2027 løber af stablen 13.–15. august 2027, og billetsalget for udstillere er åbent nu. Har du en lastbil eller bil, du vil vise frem, så sikr dig en plads. Billetter til gæster kommer senere — følg med på Facebook, så du er den første, der hører om det.
         </p>
         <a className="btn ny-cta" href="https://www.facebook.com/profile.php?id=61589298855212" target="_blank" rel="noopener">
           Følg os på Facebook <span className="arrow">→</span>
@@ -398,8 +372,9 @@ function Practical() {
           </div>
           <div className="p-cell">
             <div className="label label-bracket">Billetter</div>
-            <h4>Billetsalget er lukket</h4>
-            <p>Festivalen er afholdt for i år. Billetter til 2027 åbner i god tid — følg med på Facebook.</p>
+            <h4>Udstillere: salget er åbent</h4>
+            <a className="line" href={D.exhibitorTicketUrl} target="_blank" rel="noopener">Køb udstillerbillet til 2027 →</a>
+            <p style={{ marginTop: 10 }}>Billetter til gæster kommer senere — følg med på Facebook.</p>
           </div>
           <div className="p-cell">
             <div className="label label-bracket">For familien</div>
