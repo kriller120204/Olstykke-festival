@@ -11,6 +11,7 @@ window.OBM_DATA = {
     { src: "images/03-maengde-aften.jpg", alt: "Mængden samlet foran scenen i aftensolen" },
     { src: "images/04-bar-nat.jpg", alt: "Baren om aftenen med lys og røg i baggrunden" },
     { src: "images/05-lastbiler-nat.jpg", alt: "Lastbilkonvojen om natten med pariserhjulet i baggrunden" },
+    { src: "images/06-lastbiler-lys-aften.jpg", alt: "Hele pladsen fyldt med oplyste lastbiler og kraner i aftenmørket" },
   ],
 
   whatGrid: [
