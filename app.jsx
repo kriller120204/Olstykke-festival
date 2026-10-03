@@ -318,14 +318,13 @@ function WhatGrid() {
             <span className="label label-bracket">03 / Hvad der skete</span>
             <h2>Tre dage<br />med <span className="accent">diesel</span> i blodet</h2>
           </div>
-          <span className="num">[ {String(items.length).padStart(2,"0")} spor · ét sted ]</span>
         </div>
         <div className="what-grid">
           {items.map(c => (
             <div key={c.id || c.num} className="what-cell">
               <div className="accent-dot"></div>
               <div>
-                <div className="what-num">{c.num} / spor</div>
+                <div className="what-num">{c.num}</div>
                 <h3 className="what-title">{c.title}</h3>
               </div>
               <p className="what-sub">{c.sub}</p>
