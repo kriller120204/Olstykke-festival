@@ -59,7 +59,7 @@ function Topbar() {
   const [open, setOpen] = useState(false);
   const links = [
     { href: "#galleri", label: "Billeder" },
-    { href: "#lineup", label: "Lineup" },
+    { href: "#hvad", label: "Hvad der skete" },
     { href: "#info", label: "Praktisk" },
   ];
   const close = () => setOpen(false);
@@ -96,15 +96,6 @@ function Topbar() {
         </nav>
       )}
     </header>
-  );
-}
-
-/* ---------- Image placeholder (striped + label) ---------- */
-function ImgPH({ label, icon }) {
-  return (
-    <div className="image-placeholder" data-label={label}>
-      {icon && <div className="ip-icon">{icon}</div>}
-    </div>
   );
 }
 
@@ -164,8 +155,8 @@ function Hero({ heroImage } = {}) {
             <a href="#galleri" className="btn btn-primary btn-xl">
               Se billederne <span className="arrow">→</span>
             </a>
-            <a href="#lineup" className="btn btn-ghost">
-              Se lineup <span className="arrow">→</span>
+            <a href="#hvad" className="btn btn-ghost">
+              Hvad der skete <span className="arrow">→</span>
             </a>
           </div>
         </div>
@@ -284,43 +275,6 @@ function WhatGrid() {
   );
 }
 
-/* ---------- Lineup ---------- */
-function Lineup() {
-  const items = D.lineup;
-
-  return (
-    <section className="section" id="lineup">
-      <div className="container">
-        <div className="section-head">
-          <div className="lhs">
-            <span className="label label-bracket">03 / Dette var med</span>
-            <h2>Folk<br />der <span className="accent">mødte op</span></h2>
-          </div>
-          <span className="num">[ {items.length} navne · tak for i år ]</span>
-        </div>
-        <div className="lineup">
-          {items.map(l => (
-            <div key={l.name} className="line-card">
-              <div className="line-tag">{l.tag}</div>
-              <div className="line-img">
-                {l.imageUrl
-                  ? <img src={imgUrl(l.imageUrl, 400)} alt={l.name} />
-                  : <ImgPH label={l.imgLabel} icon={l.icon} />
-                }
-              </div>
-              <div className="line-body">
-                <div className="meta">{l.meta}</div>
-                <div className="name">{l.name}</div>
-                <p className="blurb">{l.blurb}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 /* ---------- Næste år (teaser) ---------- */
 function NextYear() {
   return (
@@ -353,7 +307,7 @@ function Practical() {
       <div className="container">
         <div className="section-head">
           <div className="lhs">
-            <span className="label label-bracket">04 / Praktisk</span>
+            <span className="label label-bracket">03 / Praktisk</span>
             <h2>Find os.<br /><span className="accent">Kontakt os.</span></h2>
           </div>
           <span className="num">[ {addr1} · {addr2} ]</span>
@@ -403,7 +357,7 @@ function Footer() {
           <div className="foot-col">
             <h5>Festival</h5>
             <a href="#galleri">Billeder</a>
-            <a href="#lineup">Lineup</a>
+            <a href="#hvad">Hvad der skete</a>
             <a href="#klar-2027">2027</a>
           </div>
           <div className="foot-col">
@@ -453,7 +407,6 @@ function App() {
       <div className="hazard hazard-red"></div>
       <Gallery />
       <WhatGrid />
-      <Lineup />
       <NextYear />
       <div className="hazard"></div>
       <Billet />
