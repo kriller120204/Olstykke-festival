@@ -239,7 +239,7 @@ function About() {
         <div className="about-grid">
           <div className="about-main">
             <p className="about-lead">
-              Far skal se på biler, sønnike skal i tivoli, og mor skal finde en ny kjole på kræmmermarkedet.
+              Far skal se på biler, børnene skal i tivoli, og mor skal finde en ny kjole på kræmmermarkedet.
             </p>
             <p>
               ØBM er byfest, festival, kræmmermarked, foodfestival, tivoli og motorshow — samlet på én plads, i én weekend. Vi vil skabe en weekend for venner og familie, hvor man kan mødes, hygge sig og opleve en anden verden.
