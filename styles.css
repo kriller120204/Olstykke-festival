@@ -485,6 +485,89 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0.14em;
 }
 
+/* ----- hvad er ØBM ----- */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+.about-main p {
+  color: var(--cream-dim);
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0 0 18px;
+  max-width: 640px;
+}
+.about-main .about-lead {
+  font-family: var(--ff-display);
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 28px;
+}
+.about-tags {
+  list-style: none;
+  padding: 0;
+  margin: 28px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.about-tags li {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border: 1px solid var(--line-2);
+  color: var(--cream);
+}
+.about-tags li:nth-child(odd) { border-color: var(--accent); }
+.about-tags li:last-child { color: var(--gold); border-color: var(--gold); }
+.about-card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--accent);
+  padding: 32px 28px;
+}
+.about-card h3 {
+  font-family: var(--ff-display);
+  font-size: clamp(30px, 3vw, 40px);
+  line-height: 1;
+  text-transform: uppercase;
+  margin: 14px 0 18px;
+}
+.about-card h3 .accent { color: var(--accent); }
+.about-card p {
+  color: var(--cream-dim);
+  font-size: 14.5px;
+  line-height: 1.65;
+  margin: 0;
+}
+.about-points {
+  list-style: none;
+  padding: 0;
+  margin: 22px 0;
+  border-top: 1px solid var(--line);
+}
+.about-points li {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 15px;
+  color: var(--cream);
+}
+.about-points li span {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--accent);
+}
+.about-card .about-foot { font-size: 13.5px; }
+
 /* ----- hvad sker der (grid) ----- */
 .what-grid {
   display: grid;
@@ -1469,6 +1552,7 @@ img { display: block; max-width: 100%; }
 /* ----- responsive ----- */
 @media (max-width: 1080px) {
   .hero-grid { grid-template-columns: 1fr; }
+  .about-grid { grid-template-columns: 1fr; gap: 36px; }
   .hero-right { max-width: 520px; margin-top: 24px; }
   .what-grid { grid-template-columns: repeat(2, 1fr); }
   .lineup { grid-template-columns: repeat(2, 1fr); }

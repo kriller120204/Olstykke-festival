@@ -58,6 +58,7 @@ function applyTweaks(t) {
 function Topbar() {
   const [open, setOpen] = useState(false);
   const links = [
+    { href: "#om", label: "Om ØBM" },
     { href: "#galleri", label: "Billeder" },
     { href: "#hvad", label: "Hvad der skete" },
     { href: "#info", label: "Praktisk" },
@@ -216,6 +217,60 @@ function Marquee() {
   );
 }
 
+/* ---------- Hvad er ØBM? ---------- */
+function About() {
+  const tags = [
+    "Byfest", "Festival", "Truckshow", "Motorshow",
+    "Kræmmermarked", "Foodfestival", "Tivoli", "Og meget mere",
+  ];
+  return (
+    <section className="section" id="om">
+      <div className="container">
+        <div className="section-head">
+          <div className="lhs">
+            <span className="label label-bracket">01 / Hvad er ØBM?</span>
+            <h2>En weekend<br />for <span className="accent">alle</span></h2>
+          </div>
+          <span className="num">[ Ølstykke By &amp; Motorfestival ]</span>
+        </div>
+
+        <div className="about-grid">
+          <div className="about-main">
+            <p className="about-lead">
+              ØBM er byfest, festival, truckshow, motorshow, kræmmermarked, foodfestival og tivoli — samlet på én plads, i én weekend.
+            </p>
+            <p>
+              Vi vil skabe en weekend for venner og familie, hvor man kan mødes og opleve en anden verden. Hvor chrome, diesel og lysshow møder pølsevogn, karrusel og fadøl — og hvor både de mindste og de garvede vognmænd går hjem med et smil.
+            </p>
+            <p>
+              Du behøver ikke vide noget om motorer for at få en fed dag. Kom for stemningen, maden, musikken og fællesskabet — det er en weekend for alle.
+            </p>
+            <ul className="about-tags">
+              {tags.map(t => <li key={t}>{t}</li>)}
+            </ul>
+          </div>
+
+          <aside className="about-card">
+            <div className="label label-bracket">Bag ØBM</div>
+            <h3>Lokale folk.<br /><span className="accent">Lokal fest.</span></h3>
+            <p>
+              ØBM er skabt af Ølstykke Auto — folk fra byen, der brænder for motorer og for Ølstykke. Festivalen bliver til med lokale kræfter og en flok frivillige, der bruger deres fritid på at bygge pladsen op, så byen kan samles.
+            </p>
+            <ul className="about-points">
+              <li><span>01</span>Arrangeret af Ølstykke Auto</li>
+              <li><span>02</span>Drevet af frivillige</li>
+              <li><span>03</span>Lavet i Ølstykke — for alle</li>
+            </ul>
+            <p className="about-foot">
+              2026 var første udgave med 12.000 gæster. I 2027 gør vi det igen — med et større kræmmermarked og flere madvogne.
+            </p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ---------- Foto-galleri ---------- */
 function Gallery() {
   const photos = D.gallery || [];
@@ -226,7 +281,7 @@ function Gallery() {
       <div className="container">
         <div className="section-head">
           <div className="lhs">
-            <span className="label label-bracket">01 / Galleri</span>
+            <span className="label label-bracket">02 / Galleri</span>
             <h2>Sådan<br />så det <span className="accent">ud</span></h2>
           </div>
           <span className="num">[ {photos.length} billeder · ØBM 2026 ]</span>
@@ -253,7 +308,7 @@ function WhatGrid() {
       <div className="container">
         <div className="section-head">
           <div className="lhs">
-            <span className="label label-bracket">02 / Hvad der skete</span>
+            <span className="label label-bracket">03 / Hvad der skete</span>
             <h2>Tre dage<br />med <span className="accent">diesel</span> i blodet</h2>
           </div>
           <span className="num">[ {String(items.length).padStart(2,"0")} spor · ét sted ]</span>
@@ -307,7 +362,7 @@ function Practical() {
       <div className="container">
         <div className="section-head">
           <div className="lhs">
-            <span className="label label-bracket">03 / Praktisk</span>
+            <span className="label label-bracket">04 / Praktisk</span>
             <h2>Find os.<br /><span className="accent">Kontakt os.</span></h2>
           </div>
           <span className="num">[ {addr1} · {addr2} ]</span>
@@ -356,6 +411,7 @@ function Footer() {
           </div>
           <div className="foot-col">
             <h5>Festival</h5>
+            <a href="#om">Om ØBM</a>
             <a href="#galleri">Billeder</a>
             <a href="#hvad">Hvad der skete</a>
             <a href="#klar-2027">2027</a>
@@ -405,6 +461,7 @@ function App() {
       <ThanksStats />
       <Marquee />
       <div className="hazard hazard-red"></div>
+      <About />
       <Gallery />
       <WhatGrid />
       <NextYear />
