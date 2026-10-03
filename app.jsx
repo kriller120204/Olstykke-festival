@@ -115,7 +115,7 @@ function Hero({ heroImage } = {}) {
         <div className="hero-left">
           <div className="hero-eyebrow">
             <span className="dot"></span>
-            <span className="label">[ ØBM · 1. udgave · Stadionvej, Ølstykke ]</span>
+            <span className="label">[ ØBM · 1. udgave · Ølstykke, Sjælland ]</span>
           </div>
 
           <div className="hero-countdown">
@@ -361,8 +361,8 @@ function NextYear() {
 function Practical() {
   const phone = "33 60 52 74";
   const fbUrl = "https://www.facebook.com/profile.php?id=61589298855212";
-  const addr1 = "Stadionvej";
-  const addr2 = "3650 Ølstykke";
+  const addr1 = "Ølstykke";
+  const addr2 = "Sjælland";
 
   return (
     <section className="section" id="info">
@@ -378,7 +378,7 @@ function Practical() {
           <div className="p-cell">
             <div className="label label-bracket">Adresse</div>
             <h4>{addr1}</h4>
-            <p>{addr2}<br />Nordsjælland, Danmark<br /><br />Sådan så pladsen ud i 2026 — vi bygger den op igen til 2027.</p>
+            <p>{addr2}, Danmark<br /><br />Den præcise adresse til 2027 kommer senere — følg med på Facebook.</p>
           </div>
           <div className="p-cell">
             <div className="label label-bracket">Kontakt</div>

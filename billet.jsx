@@ -12,7 +12,7 @@ function Billet() {
             <span className="label label-bracket">Billetsalg 2027 · udstillere</span>
             <h2>Vis din<br />bil <span className="accent">frem</span></h2>
           </div>
-          <span className="num">[ 13 — 15 AUG 2027 · Stadionvej, Ølstykke ]</span>
+          <span className="num">[ 13 — 15 AUG 2027 · Ølstykke, Sjælland ]</span>
         </div>
 
         <div className="billet-centered">
